@@ -1,0 +1,386 @@
+* {
+  box-sizing: border-box;
+}
+
+.dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  color: white;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(7, 8, 48, 0.96);
+  border-right: 1px solid rgba(153, 92, 255, 0.45);
+}
+
+.side-logo {
+  font-size: 25px;
+  font-weight: 800;
+  margin-bottom: 48px;
+}
+
+.side-logo span {
+  color: #a85dff;
+}
+
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-menu a,
+.logout-btn {
+  padding: 13px 15px;
+  border-radius: 10px;
+  color: #dcd8ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.side-menu a:hover,
+.menu-active {
+  background: linear-gradient(135deg, #6d35d9, #a855f7);
+  color: white !important;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.4);
+}
+
+.logout-btn {
+  margin-top: auto;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 81, 81, 0.2);
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 32px 45px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  margin: 5px 0;
+  font-size: 31px;
+}
+
+.dashboard-header p {
+  color: #cbc6ec;
+  margin: 0;
+}
+
+.header-small {
+  color: #ffd84c !important;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 23px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7844e8, #2fc6ff);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.stat-card,
+.dashboard-panel {
+  border: 1px solid rgba(163, 100, 255, 0.55);
+  background: rgba(13, 15, 69, 0.88);
+  box-shadow: 0 0 22px rgba(110, 54, 255, 0.18);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.stat-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 24px;
+  background: rgba(143, 75, 255, 0.2);
+}
+
+.stat-card p {
+  margin: 0;
+  color: #cbc6ec;
+  font-size: 13px;
+}
+
+.stat-card h2 {
+  margin: 5px 0 0;
+  color: #fff;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.dashboard-panel {
+  padding: 23px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.panel-title h2 {
+  margin: 5px 0 0;
+  font-size: 21px;
+}
+
+.panel-title a {
+  color: #ffd84c;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.level-badge {
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #ffd84c;
+  background: rgba(255, 216, 76, 0.12);
+  border: 1px solid rgba(255, 216, 76, 0.4);
+}
+
+.xp-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0 8px;
+  color: #d7d2f5;
+  font-size: 14px;
+}
+
+.xp-progress {
+  height: 13px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.xp-filled {
+  width: 32%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4de978, #4bd7ff);
+  box-shadow: 0 0 12px #4de978;
+}
+
+.panel-note {
+  margin: 17px 0 0;
+  color: #bdb8dd;
+  font-size: 14px;
+}
+
+.badge-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.badge-item {
+  flex: 1;
+  text-align: center;
+  padding: 13px 7px;
+  border-radius: 12px;
+  background: rgba(129, 66, 239, 0.15);
+  border: 1px solid rgba(162, 101, 255, 0.35);
+}
+
+.badge-item span {
+  display: block;
+  font-size: 28px;
+}
+
+.badge-item p {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #e7e3ff;
+}
+
+.locked {
+  opacity: 0.55;
+}
+
+.challenge-panel {
+  margin-bottom: 25px;
+}
+
+.challenge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: 22px;
+}
+
+.challenge-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(157, 97, 255, 0.25);
+}
+
+.challenge-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 25px;
+  background: rgba(146, 77, 255, 0.2);
+}
+
+.challenge-info {
+  flex: 1;
+}
+
+.challenge-info h3 {
+  margin: 0 0 5px;
+  font-size: 17px;
+}
+
+.challenge-info p {
+  margin: 0 0 6px;
+  color: #c5c0e4;
+  font-size: 14px;
+}
+
+.challenge-info span {
+  color: #ffd84c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.challenge-card button {
+  padding: 11px 17px;
+  border: none;
+  border-radius: 10px;
+  color: #180a39;
+  background: linear-gradient(180deg, #ffd84c, #ff9f0a);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.challenge-card button:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1050px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-page {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .side-logo {
+    margin-bottom: 15px;
+  }
+
+  .side-menu {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .side-menu a {
+    white-space: nowrap;
+  }
+
+  .logout-btn {
+    display: none;
+  }
+
+  .dashboard-main {
+    padding: 25px 18px;
+  }
+
+  .dashboard-header {
+    align-items: flex-start;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .challenge-card button {
+    width: 100%;
+  }
+}

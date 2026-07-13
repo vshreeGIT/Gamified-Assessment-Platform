@@ -1,0 +1,78 @@
+.difficulty-page {
+  min-height: 100vh;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  padding: 40px;
+}
+
+.difficulty-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.difficulty-header button {
+  float: left;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #6f47ff;
+  color: white;
+  cursor: pointer;
+}
+
+.difficulty-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.difficulty-card {
+  background: #11184a;
+  border: 2px solid #6d44ff;
+  border-radius: 20px;
+  padding: 30px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.difficulty-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 30px #8258ff;
+}
+
+.difficulty-icon {
+  font-size: 60px;
+}
+
+.difficulty-card h2 {
+  margin-top: 15px;
+}
+
+.difficulty-details {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.difficulty-card button {
+  margin-top: 25px;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #7c49ff, #3ed8ff);
+  color: white;
+  font-weight: bold;
+}

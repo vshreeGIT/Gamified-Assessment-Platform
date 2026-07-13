@@ -1,0 +1,173 @@
+.coding-page{
+    min-height:100vh;
+    padding:40px;
+    background:
+        var(--skillquest-bg-overlay),
+        var(--skillquest-bg);
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    color:white;
+}
+
+.coding-header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.coding-header h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.coding-header p{
+    color:#d5d5ff;
+}
+
+.language-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+    gap:30px;
+}
+
+.language-card{
+
+    background:#11184a;
+
+    border:2px solid #6942ff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    transition:.3s;
+
+    cursor:pointer;
+
+    box-shadow:0 0 20px rgba(110,70,255,.25);
+
+}
+
+.language-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 0 30px #7d59ff;
+
+}
+
+.language-icon{
+
+    font-size:60px;
+
+}
+
+.language-card h2{
+
+    margin-top:10px;
+
+    margin-bottom:5px;
+
+}
+
+.language-card p{
+
+    color:#d8d8ff;
+
+}
+
+.difficulty{
+
+    display:inline-block;
+
+    margin-top:12px;
+
+    padding:6px 12px;
+
+    background:#6b4cff;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+}
+
+.progress-box{
+
+    margin-top:20px;
+
+}
+
+.progress-bar{
+
+    width:100%;
+
+    height:10px;
+
+    background:#242d6d;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+.progress-fill{
+
+    height:100%;
+
+    background:linear-gradient(90deg,#4ef48f,#43d9ff);
+
+}
+
+.progress-box span{
+
+    display:block;
+
+    margin-top:8px;
+
+    font-size:13px;
+
+}
+
+.xp{
+
+    margin-top:18px;
+
+    color:#ffd54f;
+
+    font-weight:bold;
+
+}
+
+.language-card button{
+
+    margin-top:20px;
+
+    width:100%;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:linear-gradient(90deg,#7b46ff,#47d8ff);
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+.language-card button:hover{
+
+    opacity:.9;
+
+}

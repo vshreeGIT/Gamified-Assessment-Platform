@@ -1,0 +1,23 @@
+.communication-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 40px;
+  color: white;
+  text-align: center;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.communication-page h1 {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.communication-page p {
+  color: #d8dcff;
+}

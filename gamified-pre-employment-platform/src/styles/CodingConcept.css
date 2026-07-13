@@ -1,0 +1,68 @@
+.concept-page {
+  min-height: 100vh;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 40px;
+  color: white;
+}
+
+.concept-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.back-btn {
+  float: left;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #6d44ff;
+  color: white;
+  cursor: pointer;
+}
+
+.concept-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.concept-card {
+  background: #11184a;
+  border: 2px solid #6d44ff;
+  border-radius: 18px;
+  padding: 25px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.concept-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 25px #845dff;
+}
+
+.concept-icon {
+  font-size: 45px;
+}
+
+.concept-card h2 {
+  margin-top: 15px;
+}
+
+.concept-card p {
+  color: #ccccff;
+}
+
+.concept-card span {
+  color: #ffd54f;
+  font-weight: bold;
+}

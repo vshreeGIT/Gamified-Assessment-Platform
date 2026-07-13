@@ -1,0 +1,42 @@
+.coding-result-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  padding: 40px;
+}
+
+.result-panel {
+  width: min(460px, 100%);
+  padding: 36px;
+  text-align: center;
+  background: #11184a;
+  border: 2px solid #6d44ff;
+  border-radius: 18px;
+}
+
+.result-trophy {
+  font-size: 64px;
+}
+
+.result-panel h1 {
+  margin-bottom: 10px;
+}
+
+.result-panel strong {
+  display: block;
+  margin: 18px 0;
+  color: #ffd54f;
+  font-size: 28px;
+}
+
+.result-panel span {
+  color: #43d9ff;
+  font-weight: bold;
+}
