@@ -1,0 +1,382 @@
+/* ===========================================
+   Reasoning Home
+=========================================== */
+
+.reasoning-home {
+    min-height: 100vh;
+    padding: 60px 40px;
+    color: #fff;
+
+    background:
+        var(--skillquest-bg-overlay),
+        var(--skillquest-bg);
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.reasoning-container {
+    max-width: 1300px;
+    margin: auto;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.reasoning-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.reasoning-header h1 {
+    font-size: clamp(38px, 5vw, 60px);
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.reasoning-header p {
+    max-width: 700px;
+    margin: auto;
+    color: #d6dcff;
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.7;
+}
+
+/* ===========================================
+   Grid
+=========================================== */
+
+.reasoning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 35px;
+}
+
+/* ===========================================
+   Card
+=========================================== */
+
+.reasoning-card {
+
+    background: rgba(20, 28, 70, .88);
+
+    backdrop-filter: blur(18px);
+
+    border: 2px solid #6b4dff;
+
+    border-radius: 28px;
+
+    padding: 35px;
+
+    transition: .35s;
+
+    box-shadow: 0 0 25px rgba(90,120,255,.20);
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.reasoning-card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 0 35px rgba(100,140,255,.35);
+
+    border-color: #46c7ff;
+}
+
+/* ===========================================
+   Icon
+=========================================== */
+
+.reasoning-icon {
+
+    width: 95px;
+    height: 95px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 50px;
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        135deg,
+        #7a4cff,
+        #46c7ff
+    );
+
+    margin-bottom: 25px;
+}
+
+/* ===========================================
+   Title
+=========================================== */
+
+.reasoning-card h2 {
+
+    font-size: 34px;
+
+    margin-bottom: 10px;
+}
+
+.reasoning-card p {
+
+    color: #d6dcff;
+
+    font-size: 18px;
+}
+
+/* ===========================================
+   Badge
+=========================================== */
+
+.difficulty-tag {
+
+    display: inline-block;
+
+    margin: 22px 0;
+
+    padding: 8px 18px;
+
+    background: linear-gradient(
+        90deg,
+        #7a4cff,
+        #8d65ff
+    );
+
+    border-radius: 30px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+/* ===========================================
+   Progress
+=========================================== */
+
+.progress-bar {
+
+    width: 100%;
+
+    height: 14px;
+
+    background: rgba(255,255,255,.12);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        90deg,
+        #57f0a5,
+        #46c7ff
+    );
+
+    transition: .5s;
+}
+
+.progress-text {
+
+    color: #d6dcff;
+
+    font-size: 15px;
+
+    margin-bottom: 28px;
+}
+
+/* ===========================================
+   XP
+=========================================== */
+
+.xp {
+
+    font-size: 40px;
+
+    color: #ffd54f;
+
+    margin-bottom: 28px;
+}
+
+/* ===========================================
+   Button
+=========================================== */
+
+.reasoning-card button {
+
+    margin-top: auto;
+
+    border: none;
+
+    padding: 18px;
+
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: white;
+
+    background: linear-gradient(
+        90deg,
+        #7a4cff,
+        #46c7ff
+    );
+
+    transition: .35s;
+}
+
+.reasoning-card button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 0 22px rgba(70,199,255,.45);
+}
+
+/* ===========================================
+   Laptop
+=========================================== */
+
+@media (max-width:1200px){
+
+    .reasoning-home{
+
+        padding:50px 30px;
+    }
+
+    .reasoning-grid{
+
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+/* ===========================================
+   Tablet
+=========================================== */
+
+@media (max-width:900px){
+
+    .reasoning-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .reasoning-card{
+
+        padding:30px;
+    }
+
+}
+
+/* ===========================================
+   Mobile
+=========================================== */
+
+@media (max-width:768px){
+
+    .reasoning-home{
+
+        padding:35px 18px;
+    }
+
+    .reasoning-header{
+
+        margin-bottom:40px;
+    }
+
+    .reasoning-icon{
+
+        width:80px;
+        height:80px;
+
+        font-size:42px;
+    }
+
+    .reasoning-card h2{
+
+        font-size:28px;
+    }
+
+    .xp{
+
+        font-size:34px;
+    }
+
+    .reasoning-card button{
+
+        font-size:18px;
+    }
+
+}
+
+/* ===========================================
+   Small Mobile
+=========================================== */
+
+@media (max-width:480px){
+
+    .reasoning-home{
+
+        padding:25px 12px;
+    }
+
+    .reasoning-card{
+
+        padding:22px;
+    }
+
+    .reasoning-header h1{
+
+        font-size:32px;
+    }
+
+    .reasoning-header p{
+
+        font-size:15px;
+    }
+
+    .reasoning-icon{
+
+        width:70px;
+        height:70px;
+
+        font-size:36px;
+    }
+
+    .reasoning-card h2{
+
+        font-size:24px;
+    }
+
+    .xp{
+
+        font-size:28px;
+    }
+
+    .reasoning-card button{
+
+        font-size:16px;
+
+        padding:15px;
+    }
+
+}

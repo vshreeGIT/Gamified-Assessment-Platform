@@ -1,0 +1,526 @@
+/* ===========================================
+   Reasoning Difficulty Page
+=========================================== */
+
+.reasoning-difficulty-page {
+
+    min-height: 100vh;
+
+    padding: 60px 40px;
+
+    color: white;
+
+    background:
+        var(--skillquest-bg-overlay),
+        var(--skillquest-bg);
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.reasoning-difficulty-container {
+
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.difficulty-header {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+}
+
+.difficulty-header h1 {
+
+    font-size: clamp(38px,5vw,58px);
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.difficulty-header p {
+
+    max-width: 760px;
+
+    margin: auto;
+
+    color: #d6dcff;
+
+    font-size: clamp(16px,1.5vw,19px);
+
+    line-height: 1.8;
+}
+
+/* ===========================================
+   Main Card
+=========================================== */
+
+.difficulty-card {
+
+    background: rgba(20,28,70,.88);
+
+    backdrop-filter: blur(18px);
+
+    border: 2px solid #6b4dff;
+
+    border-radius: 28px;
+
+    padding: 40px;
+
+    box-shadow: 0 0 30px rgba(90,120,255,.25);
+
+    transition: .35s;
+}
+
+.difficulty-card:hover{
+
+    box-shadow:0 0 40px rgba(70,199,255,.25);
+
+    border-color:#46c7ff;
+}
+
+/* ===========================================
+   Top Section
+=========================================== */
+
+.difficulty-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+    margin-bottom:45px;
+}
+
+.difficulty-icon{
+
+    width:95px;
+
+    height:95px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+    box-shadow: 0 0 30px rgba(122,76,255,.35);
+    font-size:50px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7a4cff,
+        #46c7ff
+    );
+}
+
+.difficulty-top h2{
+
+    font-size:36px;
+
+    margin-bottom:10px;
+}
+
+.difficulty-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #7a4cff,
+        #8d65ff
+    );
+
+    font-size:15px;
+
+    font-weight:600;
+}
+
+/* ===========================================
+   Info Boxes
+=========================================== */
+
+.difficulty-info{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin-bottom:30px;
+}
+.info-box{
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:20px;
+
+    padding:24px;
+
+    transition:.35s;
+}
+
+.info-box:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#46c7ff;
+
+    box-shadow:
+        0 0 18px rgba(70,199,255,.25);
+
+}
+
+.info-box h3{
+
+    font-size:16px;
+
+    color:#8dd8ff;
+
+    margin-bottom:10px;
+}
+
+.info-box p{
+
+    font-size:25px;
+
+    font-weight:bold;
+
+    color:white;
+}
+
+/* ===========================================
+   Topics
+=========================================== */
+
+.topics h3{
+
+    margin-bottom:18px;
+
+    font-size:24px;
+}
+
+.topics ul{
+
+    list-style:none;
+}
+.topics li,
+.rules li{
+
+    margin-bottom:10px;
+
+    color:#d6dcff;
+
+    line-height:1.6;
+
+    font-size:17px;
+}
+/* ===========================================
+   Rules
+=========================================== */
+
+
+
+.rules h3{
+
+    margin-bottom:18px;
+
+    font-size:24px;
+}
+
+.rules ul{
+
+    list-style:none;
+}
+
+.rules li{
+
+    margin-bottom:14px;
+
+    color:#d6dcff;
+
+    line-height:1.8;
+
+    font-size:17px;
+}
+.topics{
+    margin-bottom:25px;
+
+  
+    padding-top:30px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:20px;
+
+    padding:25px;
+
+}
+
+.rules{
+    margin-bottom:30px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:20px;
+
+    padding:25px;
+
+
+
+
+    padding-top:30px;
+}
+@media (max-width:768px){
+
+    .details-grid{
+
+        grid-template-columns:1fr;
+
+        gap:20px;
+    }
+
+}
+/* ===========================================
+   Topics + Rules Grid
+=========================================== */
+
+.details-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:35px;
+
+    margin:35px 0;
+}
+/* ===========================================
+   Button
+=========================================== */
+.start-btn{
+
+    width:100%;
+
+    height:60px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:white;
+
+    background:linear-gradient(
+        90deg,
+        #7A4CFF,
+        #46C7FF
+    );
+
+    transition:.35s;
+}
+
+.start-btn:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 25px rgba(70,199,255,.45);
+
+}
+
+/* ===========================================
+   Large Laptop
+=========================================== */
+
+@media (max-width:1200px){
+
+.reasoning-difficulty-page{
+
+padding:50px 30px;
+
+}
+
+}
+
+/* ===========================================
+   Tablet
+=========================================== */
+
+@media (max-width:992px){
+
+.difficulty-info{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+/* ===========================================
+   Mobile
+=========================================== */
+
+@media (max-width:768px){
+
+.reasoning-difficulty-page{
+
+padding:35px 20px;
+
+}
+
+.difficulty-card{
+    padding:35px;
+}
+
+.difficulty-top{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+.difficulty-icon{
+
+width:80px;
+
+height:80px;
+
+font-size:42px;
+
+}
+
+.difficulty-top h2{
+
+font-size:30px;
+
+}
+
+}
+
+/* ===========================================
+   Small Mobile
+=========================================== */
+
+@media (max-width:576px){
+
+.difficulty-info{
+
+grid-template-columns:1fr;
+
+}
+
+.difficulty-card{
+
+padding:22px;
+
+}
+
+.topics li,
+.rules li{
+
+font-size:15px;
+
+}
+
+.start-btn{
+
+font-size:18px;
+
+padding:16px;
+
+}
+
+}
+
+/* ===========================================
+   Very Small Mobile
+=========================================== */
+
+@media (max-width:400px){
+
+.reasoning-difficulty-page{
+
+padding:20px 12px;
+
+}
+
+.difficulty-card{
+
+padding:18px;
+
+}
+
+.difficulty-header h1{
+
+font-size:30px;
+
+}
+
+.difficulty-top h2{
+
+font-size:24px;
+
+}
+
+.difficulty-icon{
+
+width:70px;
+
+height:70px;
+
+font-size:36px;
+
+}
+
+.info-box{
+
+padding:18px;
+
+}
+
+.info-box p{
+
+font-size:22px;
+
+}
+
+.start-btn{
+
+font-size:16px;
+
+padding:14px;
+
+}
+
+}
