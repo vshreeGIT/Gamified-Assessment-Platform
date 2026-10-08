@@ -3,13 +3,30 @@ import { useState } from "react";
 import backgroundImage from "../assets/images/skillquest-bg.png";
 
 function Register() {
-  const [role, setRole] = useState("candidate");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    college: "",
+    department: "",
+    role: "candidate",
+  });
   const navigate = useNavigate();
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleRoleChange(newRole) {
+    setFormData((prev) => ({ ...prev, role: newRole }));
+  }
 
   function handleRegister(event) {
     event.preventDefault();
 
-    if (role === "candidate") {
+    if (formData.role === "candidate") {
       navigate("/candidate-dashboard");
     } else {
       navigate("/recruiter-dashboard");
@@ -41,29 +58,78 @@ function Register() {
             Start challenges, earn XP, and unlock your career path.
           </p>
 
-          <label>Full Name</label>
-          <input type="text" placeholder="Enter your full name" required />
+          <label>Full Name *</label>
+          <input
+            type="text"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            placeholder="Enter your full name"
+            required
+          />
 
-          <label>Email Address</label>
-          <input type="email" placeholder="Enter your email address" required />
+          <label>Email Address *</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your email address"
+            required
+          />
 
-          <label>Password</label>
-          <input type="password" placeholder="Create a password" required />
+          <label>Phone Number *</label>
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Enter your phone number (e.g., 9876543210)"
+            required
+          />
+
+          <label>College / Institution</label>
+          <input
+            type="text"
+            name="college"
+            value={formData.college}
+            onChange={handleChange}
+            placeholder="Enter your college or university"
+          />
+
+          <label>Department / Stream</label>
+          <input
+            type="text"
+            name="department"
+            value={formData.department}
+            onChange={handleChange}
+            placeholder="e.g., Computer Science & Engineering"
+          />
+
+          <label>Password *</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Create a password"
+            required
+          />
 
           <label>Choose Your Role</label>
           <div className="role-options">
             <button
               type="button"
-              className={role === "candidate" ? "role-btn active-role" : "role-btn"}
-              onClick={() => setRole("candidate")}
+              className={formData.role === "candidate" ? "role-btn active-role" : "role-btn"}
+              onClick={() => handleRoleChange("candidate")}
             >
               🎮 Candidate
             </button>
 
             <button
               type="button"
-              className={role === "recruiter" ? "role-btn active-role" : "role-btn"}
-              onClick={() => setRole("recruiter")}
+              className={formData.role === "recruiter" ? "role-btn active-role" : "role-btn"}
+              onClick={() => handleRoleChange("recruiter")}
             >
               🏆 Recruiter
             </button>

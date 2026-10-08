@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.skillquest.dto.UserProfileResponse;
 import com.skillquest.dto.LoginRequest;
 import com.skillquest.dto.LoginResponse;
 import com.skillquest.dto.RegisterRequest;
 import com.skillquest.entity.Role;
 import com.skillquest.entity.User;
+import com.skillquest.exception.DuplicateEmailException;
+import com.skillquest.exception.InvalidCredentialsException;
+import com.skillquest.exception.UserNotFoundException;
 import com.skillquest.repository.UserRepository;
 import com.skillquest.security.JwtUtil;
 import com.skillquest.service.UserService;
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public String register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            return "Email already exists";
+            throw new DuplicateEmailException("Email already exists");
         }
 
         User user = new User();
@@ -69,10 +72,10 @@ public class UserServiceImpl implements UserService {
     public LoginResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
@@ -83,4 +86,31 @@ public class UserServiceImpl implements UserService {
                 user.getRole().name()
         );
     }
+    @Override
+public UserProfileResponse getProfile(String email) {
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+    UserProfileResponse response = new UserProfileResponse();
+
+    response.setId(user.getId());
+    response.setFullName(user.getFullName());
+    response.setEmail(user.getEmail());
+    response.setPhone(user.getPhone());
+
+    response.setCollege(user.getCollege());
+    response.setDepartment(user.getDepartment());
+    response.setProfileImage(user.getProfileImage());
+
+    response.setRole(user.getRole());
+
+    response.setXp(user.getXp());
+    response.setLevel(user.getLevel());
+    response.setStreak(user.getStreak());
+
+    response.setActive(user.isActive());
+
+    return response;
+}
 }
