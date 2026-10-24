@@ -306,6 +306,26 @@
   font-weight: 700;
 }
 
+.challenge-info .dashboard-communication-progress {
+  display: block;
+  margin-top: 5px;
+  color: #cbc6ec;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.challenge-info .dashboard-communication-badge {
+  display: block;
+  margin-top: 3px;
+  color: #bdb8dd;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.challenge-info .dashboard-communication-badge.earned {
+  color: #57f0a5;
+}
+
 .challenge-card button {
   padding: 11px 17px;
   border: none;

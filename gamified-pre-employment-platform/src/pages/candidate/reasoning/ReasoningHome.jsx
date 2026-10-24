@@ -1,33 +1,72 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCandidateDashboard } from "../../../services/dashboardService";
+import { isAuthenticated, logoutUser } from "../../../services/authService";
 import "./ReasoningHome.css";
+
 function ReasoningHome() {
   const navigate = useNavigate();
+  const [progressByDifficulty, setProgressByDifficulty] = useState({
+    beginner: 0,
+    intermediate: 0,
+    advanced: 0,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!isAuthenticated()) {
+      navigate("/login");
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    async function loadProgress() {
+      try {
+        const dashboard = await getCandidateDashboard();
+        if (!cancelled && dashboard.reasoningProgress) {
+          setProgressByDifficulty(dashboard.reasoningProgress);
+        }
+      } catch (err) {
+        if (!cancelled && err.message?.toLowerCase().includes("unauthorized")) {
+          logoutUser();
+          navigate("/login");
+        }
+      }
+    }
+
+    loadProgress();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const levels = [
     {
       icon: "🧠",
       title: "Beginner",
+      difficultyKey: "beginner",
       questions: 10,
       badge: "Beginner",
-      progress: 65,
       xp: 80,
       color: "green",
     },
     {
       icon: "🧩",
       title: "Intermediate",
+      difficultyKey: "intermediate",
       questions: 15,
       badge: "Intermediate",
-      progress: 35,
       xp: 150,
       color: "orange",
     },
     {
       icon: "👑",
-      title: "Expert",
+      title: "Advanced",
+      difficultyKey: "advanced",
       questions: 20,
       badge: "Advanced",
-      progress: 10,
       xp: 250,
       color: "red",
     },
@@ -36,66 +75,49 @@ function ReasoningHome() {
   return (
     <div className="reasoning-home">
       <div className="reasoning-container">
-
         <div className="reasoning-header">
-
           <h1>🧠 Logical Reasoning Arena</h1>
-
           <p>
             Solve exciting logical puzzles, sharpen your analytical thinking,
             earn XP and climb the leaderboard.
           </p>
-
         </div>
 
         <div className="reasoning-grid">
+          {levels.map((level) => {
+            const progress = progressByDifficulty[level.difficultyKey] ?? 0;
+            return (
+              <div key={level.difficultyKey} className="reasoning-card">
+                <div className="reasoning-icon">{level.icon}</div>
 
-          {levels.map((level, index) => (
-            <div
-              key={index}
-              className="reasoning-card"
-            >
+                <h2>{level.title}</h2>
 
-              <div className="reasoning-icon">
-                {level.icon}
-              </div>
+                <p>{level.questions} Questions</p>
 
-              <h2>{level.title}</h2>
+                <span className="difficulty-tag">{level.badge}</span>
 
-              <p>{level.questions} Questions</p>
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
 
-              <span className="difficulty-tag">
-                {level.badge}
-              </span>
+                <p className="progress-text">{progress}% Completed</p>
 
-              <div className="progress-bar">
+              <h3 className="xp">⚡ +{level.xp} XP</h3>
 
-                <div
-                  className="progress-fill"
-                  style={{ width: `${level.progress}%` }}
-                ></div>
-
-              </div>
-
-              <p className="progress-text">
-                {level.progress}% Completed
-              </p>
-
-              <h3 className="xp">
-                ⚡ +{level.xp} XP
-              </h3>
-
-              <button
-                onClick={() => navigate("/reasoning/difficulty")}
+                <button
+                onClick={() =>
+                  navigate(`/reasoning/difficulty/${level.difficultyKey}`)
+                }
               >
                 Start Quest →
-              </button>
-
-            </div>
-          ))}
-
+                </button>
+              </div>
+            );
+          })}
         </div>
-
       </div>
     </div>
   );

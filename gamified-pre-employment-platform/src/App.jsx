@@ -16,6 +16,9 @@ import CodingQuestion from "./pages/candidate/coding/CodingQuestion";
 
 import AptitudeHome from "./pages/candidate/aptitude/AptitudeHome";
 import CommunicationHome from "./pages/candidate/communication/CommunicationHome";
+import DataDetective from "./pages/candidate/DataDetective";
+import TeamworkMission from "./pages/candidate/TeamworkMission";
+import InterviewBattle from "./pages/candidate/InterviewBattle";
 
 import ReasoningHome from "./pages/candidate/reasoning/ReasoningHome";
 import ReasoningDifficulty from "./pages/candidate/reasoning/ReasoningDifficulty";
@@ -49,7 +52,12 @@ function App() {
         />
 
         <Route path="/aptitude" element={<AptitudeHome />} />
+        <Route path="/communication/:subdivisionId" element={<CommunicationHome />} />
         <Route path="/communication" element={<CommunicationHome />} />
+        <Route path="/data-detective" element={<DataDetective />} />
+        <Route path="/data-detective/:investigationId" element={<DataDetective />} />
+        <Route path="/teamwork" element={<TeamworkMission />} />
+        <Route path="/interview-battle" element={<InterviewBattle />} />
 
         {/* Reasoning */}
         <Route path="/reasoning" element={<ReasoningHome />} />
@@ -58,7 +66,15 @@ function App() {
           element={<ReasoningDifficulty />}
         />
         <Route
+          path="/reasoning/difficulty/:difficulty"
+          element={<ReasoningDifficulty />}
+        />
+        <Route
           path="/reasoning/question"
+          element={<ReasoningQuestion />}
+        />
+        <Route
+          path="/reasoning/question/:difficulty"
           element={<ReasoningQuestion />}
         />
         <Route

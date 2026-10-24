@@ -235,11 +235,7 @@
 
     color: white;
 
-    background: linear-gradient(
-        90deg,
-        #7a4cff,
-        #46c7ff
-    );
+    background: var(--skillquest-primary-gradient);
 
     transition: .35s;
 }
@@ -248,7 +244,12 @@
 
     transform: translateY(-3px);
 
-    box-shadow: 0 0 22px rgba(70,199,255,.45);
+    box-shadow: var(--skillquest-primary-hover-shadow);
+}
+
+.reasoning-card button:focus-visible {
+    outline: 3px solid #ffd84c;
+    outline-offset: 3px;
 }
 
 /* ===========================================

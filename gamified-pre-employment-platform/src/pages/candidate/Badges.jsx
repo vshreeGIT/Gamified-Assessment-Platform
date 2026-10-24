@@ -1,28 +1,78 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getCandidateDashboard } from "../../services/dashboardService";
+import { logoutUser, isAuthenticated } from "../../services/authService";
 import "../../styles/Badges.css";
 
 function Badges() {
-  const badges = [
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!isAuthenticated()) {
+      navigate("/login");
+      return;
+    }
+
+    async function loadData() {
+      try {
+        setLoading(true);
+        const res = await getCandidateDashboard();
+        if (!cancelled) {
+          setData(res);
+        }
+      } catch (err) {
+        console.error("Badges page data error:", err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
+
+  const defaultBadges = [
     {
       icon: "💻",
       title: "Code Starter",
       description: "Completed your first technical challenge.",
-      xp: "Earned • +50 XP",
-      earned: true,
+      xp: "Locked • Complete Coding Challenge",
+      earned: false,
     },
     {
       icon: "🧠",
       title: "Quick Thinker",
-      description: "Finished a reasoning challenge with a strong score.",
-      xp: "Earned • +80 XP",
-      earned: true,
+      description: "Finished a reasoning challenge with a strong score (>=70%).",
+      xp: "Locked • Score 70%+ in Reasoning",
+      earned: false,
     },
     {
       icon: "🎯",
       title: "Goal Getter",
       description: "Completed three challenges in SkillQuest.",
-      xp: "Earned • +100 XP",
-      earned: true,
+      xp: "Locked • Complete 3 Quests",
+      earned: false,
+    },
+    {
+      icon: "🏆",
+      title: "Logic Master",
+      description: "Achieved 90%+ accuracy on a Logical Reasoning Quest.",
+      xp: "Locked • Achieve 90%+ Accuracy",
+      earned: false,
+    },
+    {
+      icon: "🌱",
+      title: "Quest Beginner",
+      description: "Started your quest journey and finished your first challenge.",
+      xp: "Locked • Finish First Quest",
+      earned: false,
     },
     {
       icon: "💬",
@@ -31,21 +81,22 @@ function Badges() {
       xp: "Locked • Complete Communication Quest",
       earned: false,
     },
-    {
-      icon: "📊",
-      title: "Data Explorer",
-      description: "Complete the Data Detective challenge to unlock.",
-      xp: "Locked • Complete Data Detective",
-      earned: false,
-    },
-    {
-      icon: "🏆",
-      title: "Top Performer",
-      description: "Reach the top 10 on the leaderboard.",
-      xp: "Locked • Reach leaderboard rank #10",
-      earned: false,
-    },
   ];
+
+  const badges = data?.badges?.map((b) => ({
+    icon: b.icon,
+    title: b.name,
+    description: b.description,
+    xp: b.xpText || (b.earned ? "Earned" : "Locked"),
+    earned: b.earned,
+  })) || defaultBadges;
+
+  const earnedCount = badges.filter((b) => b.earned).length;
+  const totalCount = badges.length;
+  const remainingCount = totalCount - earnedCount;
+  const progressPercent = totalCount > 0 ? Math.round((earnedCount / totalCount) * 100) : 0;
+  const userXp = data?.xp ?? 0;
+  const userLevel = data?.level ?? 1;
 
   return (
     <div className="badges-page">
@@ -60,14 +111,22 @@ function Badges() {
           <Link to="/badges" className="badges-active">
             🛡️ My Badges
           </Link>
-          <a href="#leaderboard">🏆 Leaderboard</a>
-          <a href="#jobs">💼 Job Matches</a>
-          <a href="#profile">👤 Profile</a>
+          <Link to="/leaderboard">🏆 Leaderboard</Link>
+          <Link to="/job-matches">💼 Job Matches</Link>
+          <Link to="/candidate-profile">👤 Profile</Link>
         </nav>
 
-        <Link to="/" className="badges-logout">
+        <a
+          href="#logout"
+          onClick={(e) => {
+            e.preventDefault();
+            logoutUser();
+            navigate("/login");
+          }}
+          className="badges-logout"
+        >
           🚪 Logout
-        </Link>
+        </a>
       </aside>
 
       <main className="badges-main">
@@ -79,8 +138,8 @@ function Badges() {
           </div>
 
           <div className="badge-level-box">
-            <span>⚡ 320 XP</span>
-            <strong>Level 1</strong>
+            <span>⚡ {userXp} XP</span>
+            <strong>Level {userLevel}</strong>
           </div>
         </header>
 
@@ -89,15 +148,17 @@ function Badges() {
             <span>🛡️</span>
             <div>
               <p>Badges Earned</p>
-              <h2>3 / 6</h2>
+              <h2>
+                {loading ? "..." : `${earnedCount} / ${totalCount}`}
+              </h2>
             </div>
           </div>
 
           <div className="summary-card">
             <span>⚡</span>
             <div>
-              <p>Badge XP Earned</p>
-              <h2>230 XP</h2>
+              <p>Total XP Earned</p>
+              <h2>{loading ? "..." : `${userXp} XP`}</h2>
             </div>
           </div>
 
@@ -105,7 +166,7 @@ function Badges() {
             <span>🔒</span>
             <div>
               <p>Badges Remaining</p>
-              <h2>3</h2>
+              <h2>{loading ? "..." : remainingCount}</h2>
             </div>
           </div>
         </section>
@@ -114,13 +175,18 @@ function Badges() {
           <div className="badge-panel-title">
             <div>
               <p className="badges-small-title">COLLECTION PROGRESS</p>
-              <h2>50% Badge Collection Complete</h2>
+              <h2>{progressPercent}% Badge Collection Complete</h2>
             </div>
-            <span>3 of 6</span>
+            <span>
+              {earnedCount} of {totalCount}
+            </span>
           </div>
 
           <div className="badge-progress-bar">
-            <div className="badge-progress-fill"></div>
+            <div
+              className="badge-progress-fill"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
           </div>
         </section>
 

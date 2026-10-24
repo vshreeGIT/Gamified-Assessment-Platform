@@ -52,7 +52,11 @@ public class UserServiceImpl implements UserService {
         user.setCollege(request.getCollege());
         user.setDepartment(request.getDepartment());
 
-        user.setRole(Role.CANDIDATE);
+        if (request.getRole() != null && request.getRole().equalsIgnoreCase("RECRUITER")) {
+            user.setRole(Role.RECRUITER);
+        } else {
+            user.setRole(Role.CANDIDATE);
+        }
 
         user.setXp(0);
         user.setLevel(1);

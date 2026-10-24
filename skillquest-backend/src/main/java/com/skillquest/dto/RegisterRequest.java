@@ -24,4 +24,6 @@ public class RegisterRequest {
 
     private String department;
 
+    private String role;
+
 }

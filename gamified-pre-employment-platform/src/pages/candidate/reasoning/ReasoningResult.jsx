@@ -5,46 +5,61 @@ function ReasoningResult() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const score = location.state?.score || 0;
-  const total = location.state?.total || 5;
+  const stateResult = location.state?.result;
+  const timedOut = Boolean(location.state?.timedOut);
 
-  const accuracy = Math.round((score / total) * 100);
-  const wrong = total - score;
-
-  let xp = 20;
-  let badge = "🌱 Quest Beginner";
-
-  if (accuracy >= 90) {
-    xp = 100;
-    badge = "🏆 Logic Master";
-  } else if (accuracy >= 80) {
-    xp = 80;
-    badge = "🥇 Logic Expert";
-  } else if (accuracy >= 70) {
-    xp = 60;
-    badge = "🥈 Puzzle Solver";
-  } else if (accuracy >= 50) {
-    xp = 40;
-    badge = "🥉 Explorer";
+  // If no result is present in state (e.g. direct URL visit or full browser reload without history)
+  if (!stateResult && !location.state?.score) {
+    return (
+      <div className="reasoning-result-page">
+        <div className="result-card">
+          <div className="result-header">
+            <h1>Quest Summary</h1>
+            <p>No recent assessment result found in this session.</p>
+          </div>
+          <div className="result-buttons" style={{ marginTop: "2rem" }}>
+            <button className="play-again-btn" onClick={() => navigate("/reasoning")}>
+              🧠 Go to Quests
+            </button>
+            <button className="dashboard-btn" onClick={() => navigate("/candidate-dashboard")}>
+              🏠 Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
+
+  const result = stateResult || {};
+  const score = result.score ?? location.state?.score ?? 0;
+  const total = result.totalQuestions ?? location.state?.total ?? 10;
+  const accuracy = result.accuracy ?? (total > 0 ? Math.round((score / total) * 100) : 0);
+  const earnedXp = result.earnedXp ?? 20;
+  const badge = result.badge ?? "🌱 Quest Beginner";
+  const passed = result.passed !== undefined ? result.passed : accuracy >= 70;
+  const correct = result.correctAnswers ?? score;
+  const wrong = result.wrongAnswers ?? Math.max(0, total - score);
 
   return (
     <div className="reasoning-result-page">
-
       <div className="result-card">
-
         <div className="result-header">
+          {timedOut && (
+            <p style={{ color: "#f59e0b", fontWeight: 600, marginBottom: "0.5rem" }}>
+              ⏱ Time expired! Your answers were automatically submitted.
+            </p>
+          )}
 
-          <h1>🎉 Quest Complete!</h1>
+          <h1>{passed ? "🎉 Quest Complete!" : "⚔️ Quest Finished!"}</h1>
 
           <p>
-            Congratulations! You have completed the Logical Reasoning Quest.
+            {passed
+              ? "Outstanding performance! You passed the Logical Reasoning Quest and unlocked your reward."
+              : "Good effort! Practice more questions to improve your accuracy and pass this quest."}
           </p>
-
         </div>
 
         <div className="result-grid">
-
           <div className="result-box">
             <h3>⭐ Score</h3>
             <p>{score} / {total}</p>
@@ -57,7 +72,7 @@ function ReasoningResult() {
 
           <div className="result-box">
             <h3>⚡ XP Earned</h3>
-            <p>+{xp}</p>
+            <p style={{ color: "#22c55e", fontWeight: "bold" }}>+{earnedXp} XP</p>
           </div>
 
           <div className="result-box">
@@ -66,19 +81,19 @@ function ReasoningResult() {
           </div>
 
           <div className="result-box">
-            <h3>✅ Correct</h3>
-            <p>{score}</p>
+            <h3>Status</h3>
+            <p style={{ color: passed ? "#22c55e" : "#f59e0b", fontWeight: "bold" }}>
+              {passed ? "PASSED ✅" : "NEEDS PRACTICE ⚠️"}
+            </p>
           </div>
 
           <div className="result-box">
-            <h3>❌ Wrong</h3>
-            <p>{wrong}</p>
+            <h3>✅ Correct / ❌ Wrong</h3>
+            <p>{correct} / {wrong}</p>
           </div>
-
         </div>
 
         <div className="result-buttons">
-
           <button
             className="play-again-btn"
             onClick={() => navigate("/reasoning")}
@@ -90,13 +105,10 @@ function ReasoningResult() {
             className="dashboard-btn"
             onClick={() => navigate("/candidate-dashboard")}
           >
-            🏠 Dashboard
+            🏠 View in Dashboard
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

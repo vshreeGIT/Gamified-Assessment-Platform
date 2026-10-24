@@ -11,6 +11,8 @@
     rgba(5, 5, 35, 0.9),
     rgba(5, 5, 35, 0.96)
   );
+  --skillquest-primary-gradient: linear-gradient(90deg, #7a4cff, #46c7ff);
+  --skillquest-primary-hover-shadow: 0 0 22px rgba(70, 199, 255, 0.45);
 }
 
 body {

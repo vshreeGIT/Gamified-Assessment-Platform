@@ -20,6 +20,9 @@ function CodingQuestion() {
   const [completedQuestions, setCompletedQuestions] = useState([]);
   const [time, setTime] = useState(20 * 60);
   const [output, setOutput] = useState("");
+  const [session, setSession] = useState(null);
+  const [sessionError, setSessionError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const question = useMemo(() => {
     return (
@@ -35,6 +38,23 @@ function CodingQuestion() {
   const [code, setCode] = useState(question.starterCode);
 
   useEffect(() => {
+    let active = true;
+    const token = localStorage.getItem("skillquest_token");
+    fetch(`http://localhost:8080/api/coding/${language}/${concept}/${difficulty}/start`, {
+      method: "POST", headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    }).then(async (response) => {
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.message || body.error || "Unable to start Coding Arena.");
+      return body;
+    }).then((body) => {
+      if (!active) return;
+      setSession(body);
+      setTime(Math.max(0, Math.ceil((new Date(body.deadlineAt).getTime() - Date.now()) / 1000)));
+    }).catch((error) => { if (active) setSessionError(error.message); });
+    return () => { active = false; };
+  }, [language, concept, difficulty]);
+
+  useEffect(() => {
     setCode(question.starterCode);
     setOutput("");
   }, [question]);
@@ -46,38 +66,31 @@ function CodingQuestion() {
   };
 
   const runCode = () => {
-    setOutput(`Running...
-
-✔ Test 1 Passed
-✔ Test 2 Passed
-○ Test 3 Pending
-
-Output
-----------------------
-${question.sampleOutput}
-
-Execution Time : 0.01 sec
-Memory : 2 MB`);
+    setOutput("Code execution is not connected to a server evaluator. You can submit this response for a saved attempt, but the current system does not score or run the code.");
   };
 
-  const submitCode = useCallback(() => {
-    setCompletedQuestions((prev) =>
-      prev.includes(currentQuestion) ? prev : [...prev, currentQuestion]
-    );
-
-    setOutput(`Congratulations!
-
-Passed 10/10 Test Cases
-XP Earned : +100
-Badge Earned : ${displayText(concept)} Explorer`);
-  }, [concept, currentQuestion]);
+  const submitCode = useCallback(async () => {
+    if (!session || submitting || time <= 0) return;
+    setSubmitting(true);
+    try {
+      const token = localStorage.getItem("skillquest_token");
+      const response = await fetch(`http://localhost:8080/api/coding/${language}/${concept}/${difficulty}/submit`, {
+        method: "POST", headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ sessionKey: session.sessionKey, questionNumber: currentQuestion, code }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.message || body.error || "Unable to save Coding Arena submission.");
+      setCompletedQuestions((prev) => prev.includes(currentQuestion) ? prev : [...prev, currentQuestion]);
+      setOutput(body.message || "Coding response saved.");
+    } catch (error) { setOutput(error.message); }
+    finally { setSubmitting(false); }
+  }, [code, concept, currentQuestion, difficulty, language, session, submitting, time]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTime((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          submitCode();
           return 0;
         }
 
@@ -86,7 +99,7 @@ Badge Earned : ${displayText(concept)} Explorer`);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [submitCode]);
+  }, []);
 
   const resetCode = () => {
     setCode(question.starterCode);
@@ -171,7 +184,7 @@ Badge Earned : ${displayText(concept)} Explorer`);
                 Reset
               </button>
               <button onClick={runCode}>▶ Run</button>
-              <button onClick={submitCode}>✅ Submit</button>
+              <button onClick={submitCode} disabled={!session || submitting || time <= 0}>{submitting ? "Saving…" : "✅ Submit"}</button>
               <button className="secondary-action" onClick={goNext}>
                 Next →
               </button>
@@ -179,7 +192,7 @@ Badge Earned : ${displayText(concept)} Explorer`);
 
             <div className="output">
               <h3>Output</h3>
-              <pre>{output || "Run your code to see test results here."}</pre>
+              <pre>{sessionError || output || (time <= 0 ? "Time expired. This assessment was not submitted." : "Run your code to see test results here.")}</pre>
             </div>
           </div>
         </div>

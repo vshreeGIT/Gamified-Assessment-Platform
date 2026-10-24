@@ -1,5 +1,7 @@
 package com.skillquest.entity;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,6 +33,7 @@ public class User {
     private int xp;
     private int level;
     private int streak;
+    private Set<String> interviewBattleXpRewardKeys = new HashSet<>();
 
     // Status
     private boolean active;

@@ -219,18 +219,57 @@
 }
 
 .start-quest-btn {
-  color: #190a3b;
-  background: linear-gradient(180deg, #ffd84c, #ff9f0a);
+  padding: 15px;
+  border-radius: 16px;
+  color: #fff;
+  background: var(--skillquest-primary-gradient);
+  font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 0 #8d4a00;
+  transition: transform .3s, box-shadow .3s;
 }
 
 .start-quest-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--skillquest-primary-hover-shadow);
+}
+
+.start-quest-btn:focus-visible {
+  outline: 3px solid #ffd84c;
+  outline-offset: 3px;
 }
 
 .quest-locked {
   opacity: 0.6;
+}
+
+.quest-locked h2 {
+  color: #f3f0ff;
+  opacity: 1;
+}
+
+.quest-progress-state {
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 5px 10px;
+  border: 1px solid rgba(162, 101, 255, 0.35);
+  border-radius: 18px;
+  color: #dcd8ff;
+  background: rgba(129, 66, 239, 0.12);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .4px;
+}
+
+.quest-progress-state.passed { color: #57f0a5; border-color: rgba(87, 240, 165, .35); }
+.quest-progress-state.in_progress { color: #46c7ff; border-color: rgba(70, 199, 255, .35); }
+.quest-progress-state.attempted { color: #ffd84c; border-color: rgba(255, 216, 76, .35); }
+.quest-progress-state.locked { color: #ffd84c; }
+
+.quest-prerequisite-message {
+  margin: 8px 0 0 !important;
+  color: #cbc6ec !important;
+  font-size: 12px !important;
+  line-height: 1.45;
 }
 
 .locked-quest-btn {

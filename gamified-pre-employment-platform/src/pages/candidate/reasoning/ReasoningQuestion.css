@@ -233,11 +233,7 @@
 
     color: white;
 
-    background: linear-gradient(
-        90deg,
-        #7a4cff,
-        #46c7ff
-    );
+    background: var(--skillquest-primary-gradient);
 
     transition: .3s;
 }
@@ -247,7 +243,13 @@
 
     transform: translateY(-3px);
 
-    box-shadow: 0 0 18px rgba(80,180,255,.35);
+    box-shadow: var(--skillquest-primary-hover-shadow);
+}
+
+.navigation button:focus-visible,
+.submit-btn:focus-visible {
+    outline: 3px solid #ffd84c;
+    outline-offset: 3px;
 }
 
 .navigation button:disabled {

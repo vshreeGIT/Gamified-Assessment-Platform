@@ -1,0 +1,38 @@
+.teamwork-page { min-height: 100vh; }
+.teamwork-page .dashboard-main { min-width: 0; }
+.teamwork-back { margin-bottom: 18px; }
+.teamwork-back a { color: #ffd84c; font-weight: 700; text-decoration: none; }
+.teamwork-back a:hover { color: #fff; }
+.teamwork-panel { max-width: 1100px; margin: 0 auto 22px; padding: clamp(20px, 3vw, 32px); }
+.teamwork-panel h1 { margin: 7px 0 12px; font-size: clamp(27px, 3vw, 36px); }
+.teamwork-intro { color: #cbc6ec; font-size: 14px; line-height: 1.6; }
+.teamwork-status { display: inline-block; margin: 14px 0; padding: 8px 12px; border: 1px solid rgba(255, 216, 76, .35); border-radius: 20px; color: #ffd84c; background: rgba(255, 216, 76, .08); font-size: 12px; font-weight: 800; }
+.teamwork-status.passed { border-color: rgba(87, 240, 165, .35); color: #57f0a5; background: rgba(87, 240, 165, .08); }
+.teamwork-primary,.teamwork-secondary { border: 0; border-radius: 16px; padding: 13px 20px; color: #fff; background: var(--skillquest-primary-gradient); font: inherit; font-weight: 800; cursor: pointer; transition: transform .25s, box-shadow .25s; }
+.teamwork-primary:hover,.teamwork-secondary:hover { transform: translateY(-3px); box-shadow: var(--skillquest-primary-hover-shadow); }
+.teamwork-primary:focus-visible,.teamwork-secondary:focus-visible { outline: 3px solid #ffd84c; outline-offset: 3px; }
+.teamwork-locked { margin: 18px 0; padding: 16px 18px; border: 1px solid rgba(255, 216, 76, .32); border-radius: 13px; color: #e7e3ff; background: rgba(255, 216, 76, .06); }
+.teamwork-locked strong { color: #ffd84c; }
+.teamwork-locked p { margin: 8px 0; color: #cbc6ec; }
+.teamwork-locked ul { margin: 8px 0 0; padding-left: 22px; color: #d7d2f5; line-height: 1.65; }
+.teamwork-question-list { display: grid; gap: 15px; margin: 22px 0; }
+.teamwork-question { padding: 19px; border: 1px solid rgba(163, 100, 255, .35); border-radius: 15px; background: rgba(255, 255, 255, .04); }
+.teamwork-question-number { color: #ffd84c; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.teamwork-question h2 { margin: 8px 0; color: #fff; font-size: 18px; }
+.teamwork-scenario,.teamwork-prompt { color: #cbc6ec; font-size: 13px; line-height: 1.55; }
+.teamwork-prompt { margin: 12px 0 8px; color: #e7e3ff; font-weight: 700; }
+.teamwork-choices { display: grid; gap: 8px; }
+.teamwork-choices button { padding: 11px 13px; border: 1px solid rgba(162, 101, 255, .3); border-radius: 11px; color: #e7e3ff; background: rgba(255, 255, 255, .04); text-align: left; font: inherit; font-size: 13px; cursor: pointer; transition: .2s; }
+.teamwork-choices button:hover,.teamwork-choices button.selected { border-color: #46c7ff; background: rgba(70, 120, 255, .15); }
+.teamwork-choices button:focus-visible { outline: 2px solid #ffd84c; outline-offset: 2px; }
+.teamwork-submit,.teamwork-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 17px; border-top: 1px solid rgba(162, 101, 255, .22); color: #cbc6ec; font-size: 13px; }
+.teamwork-error { margin-bottom: 15px; padding: 12px 15px; border: 1px solid #ef4444; border-radius: 12px; color: #fca5a5; background: rgba(239, 68, 68, .12); }
+.teamwork-result-state { display: inline-block; margin: 8px 0 18px; padding: 8px 13px; border: 1px solid rgba(255, 216, 76, .35); border-radius: 20px; color: #ffd84c; font-weight: 800; }
+.teamwork-result-state.passed { border-color: rgba(87, 240, 165, .35); color: #57f0a5; }
+.teamwork-result .communication-result-metrics { display: flex; gap: 14px; margin: 8px 0 20px; }
+.teamwork-result .communication-result-metrics > div { min-width: 140px; padding: 15px 18px; border: 1px solid rgba(163, 100, 255, .35); border-radius: 13px; background: rgba(143, 75, 255, .1); }
+.teamwork-result .communication-result-metrics strong,.teamwork-result .communication-result-metrics span { display: block; }
+.teamwork-result .communication-result-metrics strong { color: #ffd84c; font-size: 20px; }
+.teamwork-result .communication-result-metrics span { margin-top: 5px; color: #cbc6ec; font-size: 12px; }
+.teamwork-actions { justify-content: flex-start; margin-top: 18px; }
+@media (max-width: 760px) { .teamwork-submit { align-items: flex-start; flex-direction: column; } .teamwork-result .communication-result-metrics { flex-wrap: wrap; } }
