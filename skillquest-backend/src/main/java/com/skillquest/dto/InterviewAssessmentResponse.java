@@ -8,6 +8,7 @@ import java.util.Map;
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class InterviewAssessmentResponse {
     private String sessionKey;
+    private String role;
     private String status;
     private Instant startedAt;
     private Instant deadlineAt;

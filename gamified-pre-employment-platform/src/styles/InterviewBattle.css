@@ -21,6 +21,18 @@
 .interview-answer { width:100%; min-height:190px; box-sizing:border-box; margin-top:18px; padding:14px; border:1px solid rgba(162,101,255,.35); border-radius:12px; color:#f2efff; background:rgba(8,10,31,.72); font:inherit; line-height:1.55; resize:vertical; }
 .interview-answer::placeholder { color:#9a94bd; }
 .interview-answer-meta { display:flex; justify-content:space-between; margin-top:7px; color:#aaa4ca; font-size:12px; }
+.interview-response-editor { margin-top:18px; }
+.interview-response-editor .interview-answer { margin-top:14px; }
+.interview-mode-switch { display:inline-flex; gap:5px; padding:4px; border:1px solid rgba(163,100,255,.35); border-radius:13px; background:rgba(8,10,31,.62); }
+.interview-mode-switch button { min-height:38px; padding:8px 14px; border:0; border-radius:10px; color:#cbc6ec; background:transparent; font:inherit; font-weight:700; cursor:pointer; }
+.interview-mode-switch button.active { color:#fff; background:var(--skillquest-primary-gradient); box-shadow:0 5px 16px rgba(143,75,255,.2); }
+.interview-mode-switch button:focus-visible,.interview-speech-buttons button:focus-visible { outline:3px solid #ffd84c; outline-offset:3px; }
+.interview-speech-controls { margin-top:13px; padding:13px 15px; border:1px solid rgba(163,100,255,.28); border-radius:13px; background:rgba(143,75,255,.07); }
+.interview-speech-help,.interview-speech-status,.interview-speech-error { margin:0 0 10px; color:#cbc6ec; font-size:13px; line-height:1.55; }
+.interview-speech-status { color:#ffd84c; }
+.interview-speech-error { color:#fca5a5; }
+.interview-speech-buttons { display:flex; flex-wrap:wrap; gap:9px; }
+.interview-speech-buttons .interview-primary,.interview-speech-buttons .interview-secondary { min-height:40px; padding:9px 15px; }
 .interview-navigation,.interview-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:18px; padding-top:17px; border-top:1px solid rgba(162,101,255,.22); }
 .interview-primary,.interview-secondary { min-height:44px; padding:12px 19px; border:0; border-radius:14px; color:#fff; background:var(--skillquest-primary-gradient); font:inherit; font-weight:800; cursor:pointer; transition:transform .22s,box-shadow .22s,opacity .22s; }
 .interview-primary:hover:not(:disabled),.interview-secondary:hover:not(:disabled) { transform:translateY(-2px); box-shadow:var(--skillquest-primary-hover-shadow); }
@@ -50,4 +62,12 @@
 .interview-confirm h2 { margin-top:0; color:#fff; }
 .interview-confirm p { color:#cbc6ec; line-height:1.55; }
 .interview-confirm .interview-actions { justify-content:flex-end; }
-@media(max-width:680px) { .interview-navigation { align-items:stretch; } .interview-navigation > button { flex:1; } }
+@media(max-width:680px) { .interview-navigation { align-items:stretch; } .interview-navigation > button { flex:1; } .interview-response-editor .interview-answer { min-height:160px; } .interview-mode-switch { display:flex; width:100%; box-sizing:border-box; } .interview-mode-switch button { flex:1; padding-inline:8px; } .interview-speech-buttons > button { flex:1 1 calc(50% - 9px); } }
+.interview-role-selector { margin:18px 0 10px; }
+.interview-role-selector label { display:block; margin-bottom:7px; color:#cbc6ec; font-size:14px; font-weight:700; }
+.interview-role-selector select { width:100%; max-width:420px; padding:11px 14px; border:1px solid rgba(162,101,255,.4); border-radius:12px; color:#f2efff; background:rgba(8,10,31,.8); font:inherit; font-size:15px; cursor:pointer; appearance:none; }
+.interview-role-selector select:focus { outline:3px solid #ffd84c; outline-offset:2px; }
+.interview-role-selector select option { background:#1a1535; }
+.interview-role-selector select:disabled { opacity:.75; cursor:not-allowed; }
+.interview-role-note { margin:8px 0 0; color:#aaa4ca; font-size:12px; }
+.interview-role-badge { display:inline-block; margin:5px 0 2px; padding:7px 11px; border:1px solid rgba(163,100,255,.36); border-radius:18px; color:#ffd84c; background:rgba(143,75,255,.09); font-size:13px; font-weight:700; }

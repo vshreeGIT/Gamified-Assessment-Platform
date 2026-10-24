@@ -12,7 +12,7 @@ async function request(path, options = {}) {
   return body;
 }
 
-export const startInterviewAssessment = () => request("/start", { method: "POST" });
+export const startInterviewAssessment = (role) => request(`/start?role=${encodeURIComponent(role)}`, { method: "POST" });
 export const getInterviewSession = () => request("/session");
 export const saveInterviewDraft = (payload) => request("/session/answers", { method: "PUT", body: JSON.stringify(payload) });
 export const submitInterviewAssessment = (payload) => request("/submit", { method: "POST", body: JSON.stringify(payload) });

@@ -42,7 +42,7 @@ class InterviewBattleServiceImplTest {
 
     @Test void lockedCandidateCannotStartAndNoSessionIsCreated() {
         doThrow(new AccessDeniedException("locked")).when(progress).requireInterviewUnlocked(EMAIL);
-        assertThrows(AccessDeniedException.class, () -> service.start(EMAIL));
+        assertThrows(AccessDeniedException.class, () -> service.start(EMAIL, "Python Developer"));
         verify(sessions, never()).save(any());
     }
 
@@ -50,7 +50,7 @@ class InterviewBattleServiceImplTest {
         doThrow(new AccessDeniedException("locked")).when(progress).requireInterviewUnlocked(EMAIL);
         InterviewBattleServiceImpl testingService = new InterviewBattleServiceImpl(sessions, attempts, progress, users,
                 new InterviewProgressionBypass(true));
-        var session = testingService.start(EMAIL);
+        var session = testingService.start(EMAIL, "Python Developer");
         assertNotNull(session.getSessionKey());
         verify(progress, never()).requireInterviewUnlocked(EMAIL);
         assertThrows(IllegalArgumentException.class, () -> testingService.getAttempt("other@example.test", "attempt-id"));
@@ -59,7 +59,8 @@ class InterviewBattleServiceImplTest {
     }
 
     @Test void eligibleCandidateGetsTenServerSelectedQuestionsAndTwentyMinuteDeadlineWithoutKeys() {
-        var response = service.start(EMAIL);
+        var response = service.start(EMAIL, "Python Developer");
+        assertEquals("Python Developer", response.getRole());
         assertEquals(10, response.getQuestions().size());
         assertEquals(20, response.getDurationMinutes());
         assertTrue(response.getDeadlineAt().isAfter(response.getStartedAt().plusSeconds(19 * 60)));
@@ -75,12 +76,45 @@ class InterviewBattleServiceImplTest {
         AtomicReference<InterviewAssessmentSession> stored = new AtomicReference<>();
         when(sessions.findById(sessionId(EMAIL))).thenAnswer(invocation -> Optional.ofNullable(stored.get()));
         when(sessions.save(any())).thenAnswer(invocation -> { var s = invocation.getArgument(0, InterviewAssessmentSession.class); stored.set(s); return s; });
-        var first = service.start(EMAIL);
-        var second = service.start(EMAIL);
+        var first = service.start(EMAIL, "Python Developer");
+        var second = service.start(EMAIL, "Java Developer");
         assertEquals(first.getSessionKey(), second.getSessionKey());
         assertEquals(first.getDeadlineAt(), second.getDeadlineAt());
+        assertEquals("Python Developer", second.getRole(), "An active assessment keeps its originally saved role.");
         verify(progress, times(1)).requireInterviewUnlocked(EMAIL);
         assertEquals(first.getSessionKey(), service.getActiveSession(EMAIL).orElseThrow().getSessionKey());
+    }
+
+    @Test void missingAndUnsupportedRolesAreRejectedBeforeCreatingASession() {
+        assertThrows(IllegalArgumentException.class, () -> service.start(EMAIL, null));
+        assertThrows(IllegalArgumentException.class, () -> service.start(EMAIL, "Python developer"));
+        verify(sessions, never()).save(any());
+    }
+
+    @Test void eachSupportedRoleHasACompleteDistinctTenQuestionBank() {
+        Map<String, String> rolesAndPrefixes = Map.of(
+                "Python Developer", "PY-", "Software Development Engineer", "SDE-",
+                "Frontend Developer", "FE-", "Full-Stack Developer", "FS-",
+                "Java Developer", "JV-", "Data Analyst", "DA-",
+                "Customer Support Engineer", "CS-", "Business Development Representative", "BDR-");
+        List<String> categories = List.of("HR and Introduction", "Technical Fundamentals", "Situational Questions",
+                "Problem-Solving Scenarios", "Customer and Communication Scenarios");
+        Set<String> allQuestionIds = new HashSet<>();
+        for (var roleAndPrefix : rolesAndPrefixes.entrySet()) {
+            var response = service.start(EMAIL, roleAndPrefix.getKey());
+            assertEquals(roleAndPrefix.getKey(), response.getRole());
+            assertEquals(10, response.getQuestions().size(), roleAndPrefix.getKey());
+            assertEquals(5, response.getQuestions().stream().filter(q -> "MULTIPLE_CHOICE".equals(q.getType())).count());
+            assertEquals(5, response.getQuestions().stream().filter(q -> "OPEN_ENDED".equals(q.getType())).count());
+            for (String category : categories) {
+                var categoryQuestions = response.getQuestions().stream().filter(q -> category.equals(q.getCategory())).toList();
+                assertEquals(2, categoryQuestions.size(), roleAndPrefix.getKey() + " / " + category);
+                assertEquals(1, categoryQuestions.stream().filter(q -> "MULTIPLE_CHOICE".equals(q.getType())).count());
+                assertEquals(1, categoryQuestions.stream().filter(q -> "OPEN_ENDED".equals(q.getType())).count());
+            }
+            assertTrue(response.getQuestions().stream().allMatch(q -> q.getId().startsWith(roleAndPrefix.getValue())));
+            for (var q : response.getQuestions()) assertTrue(allQuestionIds.add(q.getId()), "Question IDs should be role-specific.");
+        }
     }
 
     @Test void draftAnswersPersistOnTheOwnedActiveSession() {
@@ -103,6 +137,7 @@ class InterviewBattleServiceImplTest {
         assertEquals(40, result.getMaxScore());
         assertEquals(100, result.getAccuracy());
         assertEquals(130, result.getEarnedXp());
+        assertEquals(session.getRole(), result.getRole());
         assertTrue(result.isPassed());
         verify(users).awardInterviewXpOnce(EMAIL, session.getSessionKey(), 130);
     }
@@ -224,7 +259,7 @@ class InterviewBattleServiceImplTest {
     }
     private InterviewAssessmentSession activeSession(List<InterviewQuestion> questions) {
         Instant now = Instant.now(); return InterviewAssessmentSession.builder().id(sessionId(EMAIL)).userEmail(EMAIL).sessionKey("session-key")
-                .status("ACTIVE").startedAt(now).deadlineAt(now.plusSeconds(1200)).questions(questions).draftAnswers(new HashMap<>()).build();
+                .role("Python Developer").status("ACTIVE").startedAt(now).deadlineAt(now.plusSeconds(1200)).questions(questions).draftAnswers(new HashMap<>()).build();
     }
     private InterviewSubmitRequest request(InterviewAssessmentSession session, Map<String, String> answers) {
         return new InterviewSubmitRequest(session.getSessionKey(), answers);

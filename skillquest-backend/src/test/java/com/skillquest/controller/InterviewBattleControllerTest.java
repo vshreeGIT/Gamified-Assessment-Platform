@@ -14,15 +14,15 @@ class InterviewBattleControllerTest {
         InterviewBattleService service = mock(InterviewBattleService.class);
         InterviewBattleController controller = new InterviewBattleController(service);
         Principal candidate = () -> "owner@example.test";
-        InterviewAssessmentResponse active = InterviewAssessmentResponse.builder().sessionKey("s").build();
+        InterviewAssessmentResponse active = InterviewAssessmentResponse.builder().sessionKey("s").role("Python Developer").build();
         InterviewResultResponse result = InterviewResultResponse.builder().attemptId("a").build();
-        when(service.start("owner@example.test")).thenReturn(active);
+        when(service.start("owner@example.test", "Python Developer")).thenReturn(active);
         when(service.getActiveSession("owner@example.test")).thenReturn(Optional.of(active));
         when(service.getAttempt("owner@example.test", "a")).thenReturn(result);
-        assertSame(active, controller.start(candidate).getBody());
+        assertSame(active, controller.start("Python Developer", candidate).getBody());
         assertSame(active, controller.activeSession(candidate).getBody());
         assertSame(result, controller.attempt("a", candidate).getBody());
-        verify(service).start("owner@example.test");
+        verify(service).start("owner@example.test", "Python Developer");
         verify(service).getActiveSession("owner@example.test");
         verify(service).getAttempt("owner@example.test", "a");
     }

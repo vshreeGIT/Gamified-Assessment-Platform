@@ -7,6 +7,7 @@ import java.util.List;
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class InterviewResultResponse {
     private String attemptId;
+    private String role;
     private int score;
     private int maxScore;
     private int accuracy;

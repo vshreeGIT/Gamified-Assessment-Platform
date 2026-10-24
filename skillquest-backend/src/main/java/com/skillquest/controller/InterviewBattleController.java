@@ -17,8 +17,8 @@ public class InterviewBattleController {
     public InterviewBattleController(InterviewBattleService service) { this.service = service; }
 
     @PostMapping("/start")
-    public ResponseEntity<InterviewAssessmentResponse> start(Principal principal) {
-        return ResponseEntity.ok(service.start(principal.getName()));
+    public ResponseEntity<InterviewAssessmentResponse> start(@RequestParam String role, Principal principal) {
+        return ResponseEntity.ok(service.start(principal.getName(), role));
     }
 
     @GetMapping("/session")

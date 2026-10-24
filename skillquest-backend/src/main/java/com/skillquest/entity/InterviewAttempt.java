@@ -13,6 +13,7 @@ public class InterviewAttempt {
     @Id private String id;
     private String userEmail;
     private String sessionKey;
+    private String role;
     private int score;
     private int maxScore;
     private int accuracy;

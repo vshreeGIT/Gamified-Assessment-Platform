@@ -14,6 +14,7 @@ public class InterviewAssessmentSession {
     @Id private String id;
     private String userEmail;
     private String sessionKey;
+    private String role;
     private String status;
     private Instant startedAt;
     private Instant deadlineAt;
