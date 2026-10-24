@@ -137,8 +137,8 @@ public class DashboardServiceImpl implements DashboardService {
                 .currentLevelBaseXp(currentLevelBaseXp)
                 .nextLevelXp(nextLevelXp)
                 .xpToNextLevel(xpToNextLevel)
-                .completedChallengesCount(attempts.size() + communicationAttempts.size() + dataDetectiveAttempts.size())
-                .totalChallengesCount(6)
+                .completedChallengesCount(uniqueReasoningCompleted(attempts) + communicationCompleted + dataDetectiveCompleted)
+                .totalChallengesCount(11)
                 .badgesEarnedCount(badgesEarnedCount)
                 .leaderboardRank(rank)
                 .badges(badges)
@@ -197,6 +197,14 @@ public class DashboardServiceImpl implements DashboardService {
                 "intermediate", hasAttempt(attempts, "INTERMEDIATE") ? 100 : 0,
                 "advanced", hasAttempt(attempts, "ADVANCED") ? 100 : 0
         );
+    }
+
+    private int uniqueReasoningCompleted(List<ReasoningAttempt> attempts) {
+        int count = 0;
+        if (hasAttempt(attempts, "BEGINNER"))     count++;
+        if (hasAttempt(attempts, "INTERMEDIATE")) count++;
+        if (hasAttempt(attempts, "ADVANCED"))     count++;
+        return count;
     }
 
     private boolean hasAttempt(List<ReasoningAttempt> attempts, String difficulty) {

@@ -99,17 +99,36 @@
 .header-profile {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 23px;
+  justify-content: flex-end;
+  gap: 20px;
+  flex-shrink: 0;
+  padding: 0 8px 0 16px;
+  line-height: 1;
 }
 
-.avatar {
-  width: 45px;
+.header-profile > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
   height: 45px;
-  display: grid;
-  place-items: center;
+  line-height: 1;
+}
+
+.header-profile .avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  flex: 0 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   border-radius: 50%;
   background: linear-gradient(135deg, #7844e8, #2fc6ff);
+  line-height: 1;
+  font-size: 24px;
+  margin: 0;
 }
 
 .stats-grid {
@@ -384,7 +403,7 @@
   }
 
   .dashboard-header {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .dashboard-header h1 {

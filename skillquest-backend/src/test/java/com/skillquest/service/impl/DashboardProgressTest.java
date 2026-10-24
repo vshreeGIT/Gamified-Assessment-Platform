@@ -138,6 +138,58 @@ class DashboardProgressTest {
         assertEquals("Data Detective", dashboard.getRecentAttempts().get(0).getQuestType());
     }
 
+    @Test
+    void completedChallengesCountsUniqueNotRepeatedAttempts() {
+        UserRepository userRepository = mock(UserRepository.class);
+        ReasoningAttemptRepository attemptRepository = mock(ReasoningAttemptRepository.class);
+        CommunicationAttemptRepository communicationAttemptRepository = mock(CommunicationAttemptRepository.class);
+        DataDetectiveAttemptRepository dataDetectiveAttemptRepository = mock(DataDetectiveAttemptRepository.class);
+        User user = candidate();
+        when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
+        when(userRepository.findAll()).thenReturn(List.of(user));
+        // 6 reasoning attempts but only 2 unique difficulties
+        when(attemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of(
+                ReasoningAttempt.builder().difficulty("BEGINNER").build(),
+                ReasoningAttempt.builder().difficulty("BEGINNER").build(),
+                ReasoningAttempt.builder().difficulty("BEGINNER").build(),
+                ReasoningAttempt.builder().difficulty("INTERMEDIATE").build(),
+                ReasoningAttempt.builder().difficulty("INTERMEDIATE").build(),
+                ReasoningAttempt.builder().difficulty("INTERMEDIATE").build()));
+        // 2 communication attempts for the same subdivision
+        when(communicationAttemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of(
+                CommunicationAttempt.builder().subdivisionId("office-team").passed(true).earnedXp(70).build(),
+                CommunicationAttempt.builder().subdivisionId("office-team").passed(true).earnedXp(70).build()));
+        when(dataDetectiveAttemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of());
+
+        var dashboard = new DashboardServiceImpl(userRepository, attemptRepository,
+                communicationAttemptRepository, dataDetectiveAttemptRepository).getCandidateDashboard(EMAIL);
+
+        // 2 unique reasoning + 1 unique comm subdivision + 0 data detective = 3
+        assertEquals(3, dashboard.getCompletedChallengesCount());
+        // total is always 11 (3 reasoning + 5 comm + 3 data detective)
+        assertEquals(11, dashboard.getTotalChallengesCount());
+    }
+
+    @Test
+    void totalChallengesCountIsAlwaysEleven() {
+        UserRepository userRepository = mock(UserRepository.class);
+        ReasoningAttemptRepository attemptRepository = mock(ReasoningAttemptRepository.class);
+        CommunicationAttemptRepository communicationAttemptRepository = mock(CommunicationAttemptRepository.class);
+        DataDetectiveAttemptRepository dataDetectiveAttemptRepository = mock(DataDetectiveAttemptRepository.class);
+        User user = candidate();
+        when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
+        when(userRepository.findAll()).thenReturn(List.of(user));
+        when(attemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of());
+        when(communicationAttemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of());
+        when(dataDetectiveAttemptRepository.findByUserEmailOrderByCompletedAtDesc(EMAIL)).thenReturn(List.of());
+
+        var dashboard = new DashboardServiceImpl(userRepository, attemptRepository,
+                communicationAttemptRepository, dataDetectiveAttemptRepository).getCandidateDashboard(EMAIL);
+
+        assertEquals(0, dashboard.getCompletedChallengesCount());
+        assertEquals(11, dashboard.getTotalChallengesCount());
+    }
+
     private User candidate() {
         User user = new User();
         user.setEmail(EMAIL);
