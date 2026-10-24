@@ -1,9 +1,11 @@
 package com.skillquest.service.impl;
 
+import com.skillquest.util.ProfileStrengthCalculator;
 import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.skillquest.dto.UpdateProfileRequest;
 import com.skillquest.dto.UserProfileResponse;
 import com.skillquest.dto.LoginRequest;
 import com.skillquest.dto.LoginResponse;
@@ -96,25 +98,51 @@ public UserProfileResponse getProfile(String email) {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-    UserProfileResponse response = new UserProfileResponse();
-
-    response.setId(user.getId());
-    response.setFullName(user.getFullName());
-    response.setEmail(user.getEmail());
-    response.setPhone(user.getPhone());
-
-    response.setCollege(user.getCollege());
-    response.setDepartment(user.getDepartment());
-    response.setProfileImage(user.getProfileImage());
-
-    response.setRole(user.getRole());
-
-    response.setXp(user.getXp());
-    response.setLevel(user.getLevel());
-    response.setStreak(user.getStreak());
-
-    response.setActive(user.isActive());
-
-    return response;
+    return toResponse(user);
 }
+
+    @Override
+    public UserProfileResponse updateProfile(String email, UpdateProfileRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (request.getFullName() != null) user.setFullName(request.getFullName().trim());
+        if (request.getPhone() != null) user.setPhone(request.getPhone().trim());
+        if (request.getCollege() != null) user.setCollege(request.getCollege().trim());
+        if (request.getDepartment() != null) user.setDepartment(request.getDepartment().trim());
+        if (request.getSkills() != null) user.setSkills(request.getSkills());
+        if (request.getPreferredRole() != null) user.setPreferredRole(request.getPreferredRole().trim());
+        if (request.getPreferredLocation() != null) user.setPreferredLocation(request.getPreferredLocation().trim());
+        if (request.getPreferredWorkType() != null) user.setPreferredWorkType(request.getPreferredWorkType().trim());
+
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+        return toResponse(user);
+    }
+
+    private UserProfileResponse toResponse(User user) {
+        boolean hasDept    = user.getDepartment() != null && !user.getDepartment().isBlank();
+        int strength = ProfileStrengthCalculator.calculate(user);
+
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setFullName(user.getFullName());
+        response.setEmail(user.getEmail());
+        response.setPhone(user.getPhone());
+        response.setCollege(user.getCollege());
+        response.setDepartment(user.getDepartment());
+        response.setProfileImage(user.getProfileImage());
+        response.setRole(user.getRole());
+        response.setXp(user.getXp());
+        response.setLevel(user.getLevel());
+        response.setStreak(user.getStreak());
+        response.setActive(user.isActive());
+        response.setSkills(user.getSkills());
+        response.setPreferredRole(user.getPreferredRole());
+        response.setPreferredLocation(user.getPreferredLocation());
+        response.setPreferredWorkType(user.getPreferredWorkType());
+        response.setHasDepartment(hasDept);
+        response.setProfileStrength(strength);
+        return response;
+    }
 }

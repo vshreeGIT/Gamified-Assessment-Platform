@@ -3,6 +3,8 @@ package com.skillquest.dto;
 import com.skillquest.entity.Role;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class UserProfileResponse {
 
@@ -22,4 +24,14 @@ public class UserProfileResponse {
     private int streak;
 
     private boolean active;
+
+    // Career preferences
+    private List<String> skills;
+    private String preferredRole;
+    private String preferredLocation;
+    private String preferredWorkType;
+
+    // Derived
+    private boolean hasDepartment;
+    private int profileStrength;
 }

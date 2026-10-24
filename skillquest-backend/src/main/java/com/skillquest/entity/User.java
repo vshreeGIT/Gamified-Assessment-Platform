@@ -1,6 +1,7 @@
 package com.skillquest.entity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -28,6 +29,12 @@ public class User {
     private String college;
     private String department;
     private String profileImage;
+
+    // Career preferences
+    private List<String> skills;
+    private String preferredRole;
+    private String preferredLocation;
+    private String preferredWorkType;
 
     // Gamification
     private int xp;
