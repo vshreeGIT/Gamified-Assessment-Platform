@@ -1,0 +1,98 @@
+.question-list-page {
+  min-height: 100vh;
+  padding: 40px;
+  color: white;
+  background: var(--skillquest-bg-overlay), var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+}
+
+.question-list-header {
+  max-width: 960px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.question-list-back,
+.question-list-card button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: white;
+  background: #6d44ff;
+  cursor: pointer;
+}
+
+.question-list-back {
+  float: left;
+}
+
+.question-list-header h1 {
+  margin: 0 0 8px;
+}
+
+.question-list-header p,
+.question-list-card p,
+.no-questions {
+  color: #ccccff;
+}
+
+.question-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.question-list-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 220px;
+  padding: 24px;
+  border: 1px solid #6d44ff;
+  border-radius: 8px;
+  background: #11184a;
+}
+
+.question-list-card h2 {
+  margin: 16px 0 8px;
+}
+
+.question-list-card button {
+  margin-top: auto;
+}
+
+.difficulty-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.difficulty-badge.easy {
+  background: #175c38;
+}
+
+.difficulty-badge.medium {
+  background: #795a00;
+}
+
+.difficulty-badge.hard {
+  background: #812f3d;
+}
+
+@media (max-width: 640px) {
+  .question-list-page {
+    padding: 24px 16px;
+  }
+
+  .question-list-back {
+    float: none;
+    margin-bottom: 24px;
+  }
+}
+.question-list-header .assessment-eyebrow{color:#68dfff;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+.difficulty-filter{display:inline-flex;align-items:center;gap:10px;margin-top:14px;color:#e4e4ff;font-weight:700}
+.difficulty-filter select{padding:9px 12px;border:1px solid #7954eb;border-radius:8px;background:#111744;color:#fff}

@@ -12,7 +12,7 @@ function Register() {
     if (role === "candidate") {
       navigate("/candidate-dashboard");
     } else {
-      navigate("/recruiter-dashboard");
+      navigate("/recruiter/dashboard");
     }
   }
 

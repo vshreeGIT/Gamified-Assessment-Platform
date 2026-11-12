@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
+import { CandidateIcon } from "../../components/candidate/CandidateIcon";
+import CandidateNavigation from "../../components/candidate/CandidateNavigation";
 import "../../styles/JobMatches.css";
 
 function JobMatches() {
   const jobs = [
     {
       company: "TechNova Solutions",
-      logo: "💻",
+      logo: "code",
       role: "Frontend Developer Intern",
       location: "Chennai, Tamil Nadu",
       type: "Internship",
@@ -16,7 +18,7 @@ function JobMatches() {
     },
     {
       company: "DataSphere Analytics",
-      logo: "📊",
+      logo: "analytics",
       role: "Data Analyst Intern",
       location: "Bengaluru, Karnataka",
       type: "Internship",
@@ -27,7 +29,7 @@ function JobMatches() {
     },
     {
       company: "CloudNest Technologies",
-      logo: "☁️",
+      logo: "cloud",
       role: "Junior Software Engineer",
       location: "Remote",
       type: "Full Time",
@@ -38,7 +40,7 @@ function JobMatches() {
     },
     {
       company: "BrightPath Digital",
-      logo: "🚀",
+      logo: "trending",
       role: "UI/UX Design Intern",
       location: "Chennai, Tamil Nadu",
       type: "Internship",
@@ -51,32 +53,13 @@ function JobMatches() {
 
   return (
     <div className="job-page">
-      <aside className="job-sidebar">
-        <div className="job-logo">
-          🛡️ Skill<span>Quest</span>
-        </div>
-
-        <nav className="job-menu">
-          <Link to="/candidate-dashboard">🏠 Dashboard</Link>
-          <Link to="/challenges">🎯 Challenges</Link>
-          <Link to="/badges">🛡️ My Badges</Link>
-          <Link to="/leaderboard">🏆 Leaderboard</Link>
-          <Link to="/job-matches" className="job-active">
-            💼 Job Matches
-          </Link>
-          <Link to="/candidate-profile">👤 Profile</Link>
-        </nav>
-
-        <Link to="/" className="job-logout">
-          🚪 Logout
-        </Link>
-      </aside>
+      <CandidateNavigation active="/job-matches" />
 
       <main className="job-main">
         <header className="job-header">
           <div>
             <p className="job-small-title">CAREER QUEST</p>
-            <h1>Your Job Matches 💼</h1>
+            <h1>Your Job Matches</h1>
             <p>
               These opportunities are matched using your skills, badges, and
               challenge performance.
@@ -90,7 +73,7 @@ function JobMatches() {
         </header>
 
         <section className="job-insight-card">
-          <div className="job-insight-icon">✨</div>
+          <div className="job-insight-icon"><CandidateIcon name="star" /></div>
           <div>
             <h3>You have strong matches waiting!</h3>
             <p>
@@ -112,7 +95,7 @@ function JobMatches() {
           {jobs.map((job) => (
             <article className="job-card" key={job.role}>
               <div className="job-card-top">
-                <div className={`company-logo ${job.color}`}>{job.logo}</div>
+                <div className={`company-logo ${job.color}`}><CandidateIcon name={job.logo} /></div>
 
                 <div className="job-match-score">
                   <span>Match</span>
@@ -124,9 +107,9 @@ function JobMatches() {
               <h2>{job.role}</h2>
 
               <div className="job-details">
-                <span>📍 {job.location}</span>
-                <span>⏳ {job.type}</span>
-                <span>💰 {job.salary}</span>
+                <span><CandidateIcon name="mapPin" /> {job.location}</span>
+                <span><CandidateIcon name="calendar" /> {job.type}</span>
+                <span><CandidateIcon name="dollar" /> {job.salary}</span>
               </div>
 
               <div className="job-skills">
@@ -145,7 +128,7 @@ function JobMatches() {
 
         <section className="job-progress-card">
           <div className="job-progress-left">
-            <div className="job-progress-icon">🎯</div>
+            <div className="job-progress-icon"><CandidateIcon name="target" /></div>
             <div>
               <p>Unlock More Matches</p>
               <h2>Complete challenges to increase your skill score.</h2>

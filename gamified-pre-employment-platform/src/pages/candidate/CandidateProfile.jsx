@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
+import { CandidateIcon } from "../../components/candidate/CandidateIcon";
+import CandidateNavigation from "../../components/candidate/CandidateNavigation";
 import "../../styles/CandidateProfile.css";
 
 function CandidateProfile() {
   const scoreCards = [
-    { value: "91%", label: "Ability Test", icon: "⚡" },
-    { value: "90%", label: "Availability", icon: "📅" },
-    { value: "87%", label: "Leadership", icon: "👑" },
-    { value: "61%", label: "Communication", icon: "💬" },
-    { value: "96%", label: "Responsibility", icon: "🛡️" },
-    { value: "45%", label: "Loyalty", icon: "🤝" },
+    { value: "91%", label: "Ability Test", icon: "zap" },
+    { value: "90%", label: "Availability", icon: "calendar" },
+    { value: "87%", label: "Leadership", icon: "award" },
+    { value: "61%", label: "Communication", icon: "message" },
+    { value: "96%", label: "Responsibility", icon: "shield" },
+    { value: "45%", label: "Loyalty", icon: "users" },
   ];
 
   const applications = [
@@ -43,26 +45,7 @@ function CandidateProfile() {
 
   return (
     <div className="profile-page">
-      <aside className="profile-sidebar">
-        <div className="profile-brand">
-          🛡️ Skill<span>Quest</span>
-        </div>
-
-        <nav className="profile-menu">
-          <Link to="/candidate-dashboard">🏠 Dashboard</Link>
-          <Link to="/challenges">🎯 Challenges</Link>
-          <Link to="/badges">🛡️ My Badges</Link>
-          <Link to="/leaderboard">🏆 Leaderboard</Link>
-          <Link to="/job-matches">💼 Job Matches</Link>
-          <Link to="/candidate-profile" className="profile-active">
-            👤 My Profile
-          </Link>
-        </nav>
-
-        <Link to="/" className="profile-logout">
-          🚪 Logout
-        </Link>
-      </aside>
+      <CandidateNavigation active="/candidate-profile" />
 
       <main className="profile-main">
         <header className="profile-header">
@@ -72,14 +55,14 @@ function CandidateProfile() {
             <p>Track your skills, progress, and job application journey.</p>
           </div>
 
-          <button className="edit-profile-btn">✏️ Edit Profile</button>
+          <button className="edit-profile-btn"><CandidateIcon name="edit" /> Edit Profile</button>
         </header>
 
         <div className="profile-layout">
           <section className="candidate-info-card">
             <div className="candidate-cover"></div>
 
-            <div className="candidate-avatar">👩🏻💻</div>
+            <div className="candidate-avatar"><CandidateIcon name="user" /></div>
 
             <div className="candidate-name-row">
               <h2>Player One</h2>
@@ -114,17 +97,17 @@ function CandidateProfile() {
               <h3>Career Preferences</h3>
 
               <div className="profile-detail">
-                <span>📍 Location</span>
+                <span><CandidateIcon name="mapPin" /> Location</span>
                 <b>Chennai, Tamil Nadu</b>
               </div>
 
               <div className="profile-detail">
-                <span>💼 Preferred Role</span>
+                <span><CandidateIcon name="briefcase" /> Preferred Role</span>
                 <b>Software Developer</b>
               </div>
 
               <div className="profile-detail">
-                <span>🌐 Work Type</span>
+                <span><CandidateIcon name="globe" /> Work Type</span>
                 <b>Internship / Full Time</b>
               </div>
             </div>
@@ -133,7 +116,7 @@ function CandidateProfile() {
               <h3>Achievements</h3>
 
               <div className="mini-achievement">
-                <span>🎯</span>
+                <span><CandidateIcon name="target" /></span>
                 <div>
                   <b>Challenge Starter</b>
                   <p>Completed your first challenge</p>
@@ -141,7 +124,7 @@ function CandidateProfile() {
               </div>
 
               <div className="mini-achievement">
-                <span>🔥</span>
+                <span><CandidateIcon name="activity" /></span>
                 <div>
                   <b>3 Day Streak</b>
                   <p>Keep learning every day</p>
@@ -149,14 +132,14 @@ function CandidateProfile() {
               </div>
             </div>
 
-            <button className="profile-contact-btn">📩 Contact Recruiter</button>
+            <button className="profile-contact-btn"><CandidateIcon name="mail" /> Contact Recruiter</button>
           </section>
 
           <section className="profile-content">
             <section className="score-grid">
               {scoreCards.map((score) => (
                 <article className="score-card" key={score.label}>
-                  <span className="score-icon">{score.icon}</span>
+                  <span className="score-icon"><CandidateIcon name={score.icon} /></span>
                   <h3>{score.value}</h3>
                   <p>{score.label}</p>
                 </article>
@@ -184,7 +167,7 @@ function CandidateProfile() {
                 </div>
 
                 <div className="career-insight">
-                  <span>🏅</span>
+                  <span><CandidateIcon name="award" /></span>
                   <div>
                     <b>Top Performer</b>
                     <p>Your challenge score is in the top 15%.</p>
@@ -192,7 +175,7 @@ function CandidateProfile() {
                 </div>
 
                 <div className="career-insight">
-                  <span>🧠</span>
+                  <span><CandidateIcon name="cpu" /></span>
                   <div>
                     <b>Strong Technical Skills</b>
                     <p>React, Java, and SQL are your strongest areas.</p>
@@ -200,7 +183,7 @@ function CandidateProfile() {
                 </div>
 
                 <div className="career-insight">
-                  <span>🚀</span>
+                  <span><CandidateIcon name="trending" /></span>
                   <div>
                     <b>Job Ready</b>
                     <p>You are eligible for 8 recommended opportunities.</p>

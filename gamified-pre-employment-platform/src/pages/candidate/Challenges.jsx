@@ -1,4 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
+import { CandidateIcon } from "../../components/candidate/CandidateIcon";
+import CandidateNavigation from "../../components/candidate/CandidateNavigation";
 import "../../styles/Challenges.css";
 
 function Challenges() {
@@ -6,7 +8,7 @@ function Challenges() {
 
   const challenges = [
     {
-      icon: "💻",
+      icon: "code",
       title: "Coding Arena",
       description: "Complete programming tasks and earn technical skill XP.",
       xp: "+150 XP",
@@ -16,7 +18,7 @@ function Challenges() {
       route: "/coding",
     },
     {
-      icon: "🧩",
+      icon: "target",
       title: "Logical Reasoning Sprint",
       description: "Solve quick puzzles and test your problem-solving speed.",
       xp: "+80 XP",
@@ -26,7 +28,7 @@ function Challenges() {
       route: "/reasoning",
     },
     {
-      icon: "💬",
+      icon: "message",
       title: "Communication Quest",
       description: "Handle workplace situations and improve communication skills.",
       xp: "+100 XP",
@@ -36,7 +38,7 @@ function Challenges() {
       route: "/communication",
     },
     {
-      icon: "📊",
+      icon: "analytics",
       title: "Data Detective",
       description: "Analyse a small business dataset and find useful insights.",
       xp: "+120 XP",
@@ -45,7 +47,7 @@ function Challenges() {
       status: "Start Quest",
     },
     {
-      icon: "🤝",
+      icon: "users",
       title: "Teamwork Mission",
       description: "Choose the best actions in team collaboration scenarios.",
       xp: "+90 XP",
@@ -54,7 +56,7 @@ function Challenges() {
       status: "Start Quest",
     },
     {
-      icon: "🎤",
+      icon: "microphone",
       title: "Interview Battle",
       description: "Practice common interview questions and build confidence.",
       xp: "+130 XP",
@@ -71,38 +73,19 @@ function Challenges() {
 
   return (
     <div className="challenges-page">
-      <aside className="challenge-sidebar">
-        <div className="challenge-logo">
-          🛡️ Skill<span>Quest</span>
-        </div>
-
-        <nav className="challenge-menu">
-          <Link to="/candidate-dashboard">🏠 Dashboard</Link>
-          <Link to="/challenges" className="challenge-active">
-            🎯 Challenges
-          </Link>
-          <Link to="/badges">🛡️ My Badges</Link>
-          <Link to="/leaderboard">🏆 Leaderboard</Link>
-          <Link to="/job-matches">💼 Job Matches</Link>
-          <Link to="/candidate-profile">👤 Profile</Link>
-        </nav>
-
-        <Link to="/" className="challenge-logout">
-          🚪 Logout
-        </Link>
-      </aside>
+      <CandidateNavigation active="/challenges" />
 
       <main className="challenges-main">
         <header className="challenges-header">
           <div>
             <p className="challenge-small-title">QUEST BOARD</p>
-            <h1>Choose Your Next Challenge 🎯</h1>
+            <h1>Choose Your Next Challenge</h1>
             <p>Complete quests, earn XP, unlock badges, and level up your career skills.</p>
           </div>
 
           <div className="challenge-player">
-            <span>⚡ 320 XP</span>
-            <div>🧑‍💻</div>
+            <span><CandidateIcon name="zap" /> 320 XP</span>
+            <div><CandidateIcon name="user" /></div>
           </div>
         </header>
 
@@ -124,7 +107,7 @@ function Challenges() {
               key={challenge.title}
             >
               <div className="quest-top">
-                <div className="quest-icon">{challenge.icon}</div>
+                <div className="quest-icon"><CandidateIcon name={challenge.icon} /></div>
                 <span className="quest-category">{challenge.category}</span>
               </div>
 
@@ -132,8 +115,8 @@ function Challenges() {
               <p>{challenge.description}</p>
 
               <div className="quest-details">
-                <span>⚡ {challenge.xp}</span>
-                <span>🎮 {challenge.level}</span>
+                <span><CandidateIcon name="zap" /> {challenge.xp}</span>
+                <span><CandidateIcon name="star" /> {challenge.level}</span>
               </div>
 
               <button
@@ -145,7 +128,7 @@ function Challenges() {
                 disabled={challenge.status === "Locked"}
                 onClick={() => handleStart(challenge)}
               >
-                {challenge.status === "Locked" ? "🔒 Locked" : "▶ Start Quest"}
+                {challenge.status === "Locked" ? <><CandidateIcon name="lock" /> Locked</> : <><CandidateIcon name="play" /> Start Quest</>}
               </button>
             </div>
           ))}

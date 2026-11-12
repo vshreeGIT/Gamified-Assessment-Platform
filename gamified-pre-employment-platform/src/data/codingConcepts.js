@@ -76,6 +76,8 @@ const codingConcepts = {
 
   cpp: [
 
+    "Variables",
+
     "STL",
 
     "Vectors",

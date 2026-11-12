@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { CandidateIcon } from "../../../components/candidate/CandidateIcon";
 import codingLanguages from "../../../data/codingLanguages";
 import "../../../styles/CodingHome.css";
 
@@ -8,14 +9,14 @@ function CodingHome() {
   return (
     <div className="coding-page">
       <div className="coding-header">
-        <h1>💻 Coding Arena</h1>
+        <h1><CandidateIcon name="code" /> Coding Arena</h1>
         <p>Choose your programming language and start your quest.</p>
       </div>
 
       <div className="language-grid">
         {codingLanguages.map((language) => (
           <div className="language-card" key={language.id}>
-            <div className="language-icon">{language.icon}</div>
+            <div className="language-icon"><CandidateIcon name={language.icon} /></div>
 
             <h2>{language.name}</h2>
 
@@ -34,7 +35,7 @@ function CodingHome() {
               <span>{language.progress}% Completed</span>
             </div>
 
-            <div className="xp">⚡ +{language.xp} XP</div>
+            <div className="xp"><CandidateIcon name="zap" /> +{language.xp} XP</div>
 
             <button onClick={() => navigate(`/coding/${language.slug}`)}>
               Enter Arena →

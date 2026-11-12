@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -10,11 +10,20 @@ import JobMatches from "./pages/candidate/JobMatches";
 import CandidateProfile from "./pages/candidate/CandidateProfile";
 import CodingHome from "./pages/candidate/coding/CodingHome";
 import CodingConcept from "./pages/candidate/coding/CodingConcept";
-import CodingDifficulty from "./pages/candidate/coding/CodingDifficulty";
+import CodingQuestionList from "./pages/candidate/coding/CodingQuestionList";
 import CodingQuestion from "./pages/candidate/coding/CodingQuestion";
 import AptitudeHome from "./pages/candidate/aptitude/AptitudeHome";
 import ReasoningHome from "./pages/candidate/reasoning/ReasoningHome";
 import CommunicationHome from "./pages/candidate/communication/CommunicationHome";
+import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
+import RecruiterAssessments from "./pages/recruiter/RecruiterAssessments";
+import RecruiterAssessmentForm from "./pages/recruiter/RecruiterAssessmentForm";
+import RecruiterAssessmentDetail from "./pages/recruiter/RecruiterAssessmentDetail";
+import RecruiterCandidates from "./pages/recruiter/RecruiterCandidates";
+import RecruiterCandidateDetail from "./pages/recruiter/RecruiterCandidateDetail";
+import RecruiterResults from "./pages/recruiter/RecruiterResults";
+import RecruiterAnalytics from "./pages/recruiter/RecruiterAnalytics";
+import RecruiterSettings from "./pages/recruiter/RecruiterSettings";
 
 function App() {
   return (
@@ -31,14 +40,22 @@ function App() {
         <Route path="/candidate-profile" element={<CandidateProfile />} />
         <Route path="/coding" element={<CodingHome />} />
         <Route path="/coding/:language" element={<CodingConcept />} />
-        <Route path="/coding/:language/:concept" element={<CodingDifficulty />} />
-        <Route
-          path="/coding/:language/:concept/:difficulty"
-          element={<CodingQuestion />}
-        />
+        <Route path="/coding/:language/:concept/questions" element={<CodingQuestionList />} />
+        <Route path="/coding/:language/:concept/question/:id" element={<CodingQuestion />} />
         <Route path="/aptitude" element={<AptitudeHome />} />
         <Route path="/reasoning" element={<ReasoningHome />} />
         <Route path="/communication" element={<CommunicationHome />} />
+        <Route path="/recruiter-dashboard" element={<Navigate to="/recruiter/dashboard" replace />} />
+        <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+        <Route path="/recruiter/assessments" element={<RecruiterAssessments />} />
+        <Route path="/recruiter/assessments/create" element={<RecruiterAssessmentForm />} />
+        <Route path="/recruiter/assessments/:assessmentId" element={<RecruiterAssessmentDetail />} />
+        <Route path="/recruiter/create-assessment" element={<Navigate to="/recruiter/assessments/create" replace />} />
+        <Route path="/recruiter/candidates" element={<RecruiterCandidates />} />
+        <Route path="/recruiter/candidates/:candidateId" element={<RecruiterCandidateDetail />} />
+        <Route path="/recruiter/results" element={<RecruiterResults />} />
+        <Route path="/recruiter/analytics" element={<RecruiterAnalytics />} />
+        <Route path="/recruiter/settings" element={<RecruiterSettings />} />
       </Routes>
     </BrowserRouter>
   );

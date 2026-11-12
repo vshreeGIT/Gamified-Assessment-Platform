@@ -1,45 +1,47 @@
 import { Link } from "react-router-dom";
+import { CandidateIcon } from "../../components/candidate/CandidateIcon";
+import CandidateNavigation from "../../components/candidate/CandidateNavigation";
 import "../../styles/Badges.css";
 
 function Badges() {
   const badges = [
     {
-      icon: "💻",
+      icon: "code",
       title: "Code Starter",
       description: "Completed your first technical challenge.",
       xp: "Earned • +50 XP",
       earned: true,
     },
     {
-      icon: "🧠",
+      icon: "cpu",
       title: "Quick Thinker",
       description: "Finished a reasoning challenge with a strong score.",
       xp: "Earned • +80 XP",
       earned: true,
     },
     {
-      icon: "🎯",
+      icon: "target",
       title: "Goal Getter",
       description: "Completed three challenges in SkillQuest.",
       xp: "Earned • +100 XP",
       earned: true,
     },
     {
-      icon: "💬",
+      icon: "message",
       title: "Communication Pro",
       description: "Complete the Communication Quest to unlock this badge.",
       xp: "Locked • Complete Communication Quest",
       earned: false,
     },
     {
-      icon: "📊",
+      icon: "analytics",
       title: "Data Explorer",
       description: "Complete the Data Detective challenge to unlock.",
       xp: "Locked • Complete Data Detective",
       earned: false,
     },
     {
-      icon: "🏆",
+      icon: "award",
       title: "Top Performer",
       description: "Reach the top 10 on the leaderboard.",
       xp: "Locked • Reach leaderboard rank #10",
@@ -49,44 +51,25 @@ function Badges() {
 
   return (
     <div className="badges-page">
-      <aside className="badges-sidebar">
-        <div className="badges-logo">
-          🛡️ Skill<span>Quest</span>
-        </div>
-
-        <nav className="badges-menu">
-          <Link to="/candidate-dashboard">🏠 Dashboard</Link>
-          <Link to="/challenges">🎯 Challenges</Link>
-          <Link to="/badges" className="badges-active">
-            🛡️ My Badges
-          </Link>
-          <a href="#leaderboard">🏆 Leaderboard</a>
-          <a href="#jobs">💼 Job Matches</a>
-          <a href="#profile">👤 Profile</a>
-        </nav>
-
-        <Link to="/" className="badges-logout">
-          🚪 Logout
-        </Link>
-      </aside>
+      <CandidateNavigation active="/badges" />
 
       <main className="badges-main">
         <header className="badges-header">
           <div>
             <p className="badges-small-title">ACHIEVEMENT VAULT</p>
-            <h1>My Badges 🛡️</h1>
+            <h1>My Badges</h1>
             <p>Complete challenges and collect badges that prove your skills.</p>
           </div>
 
           <div className="badge-level-box">
-            <span>⚡ 320 XP</span>
+            <span><CandidateIcon name="zap" /> 320 XP</span>
             <strong>Level 1</strong>
           </div>
         </header>
 
         <section className="badge-summary">
           <div className="summary-card">
-            <span>🛡️</span>
+            <span><CandidateIcon name="shield" /></span>
             <div>
               <p>Badges Earned</p>
               <h2>3 / 6</h2>
@@ -94,7 +77,7 @@ function Badges() {
           </div>
 
           <div className="summary-card">
-            <span>⚡</span>
+            <span><CandidateIcon name="zap" /></span>
             <div>
               <p>Badge XP Earned</p>
               <h2>230 XP</h2>
@@ -102,7 +85,7 @@ function Badges() {
           </div>
 
           <div className="summary-card">
-            <span>🔒</span>
+            <span><CandidateIcon name="lock" /></span>
             <div>
               <p>Badges Remaining</p>
               <h2>3</h2>
@@ -137,7 +120,7 @@ function Badges() {
               className={`badge-card ${!badge.earned ? "badge-locked-card" : ""}`}
               key={index}
             >
-              <div className="badge-icon-circle">{badge.icon}</div>
+              <div className="badge-icon-circle"><CandidateIcon name={badge.icon} /></div>
 
               <h3>{badge.title}</h3>
               <p>{badge.description}</p>

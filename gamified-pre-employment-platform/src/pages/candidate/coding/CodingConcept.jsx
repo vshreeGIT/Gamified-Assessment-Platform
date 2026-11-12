@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { CandidateIcon } from "../../../components/candidate/CandidateIcon";
 import codingConcepts from "../../../data/codingConcepts";
 import "../../../styles/CodingConcept.css";
 
@@ -25,11 +26,11 @@ function CodingConcept() {
             key={concept}
             onClick={() =>
               navigate(
-                `/coding/${language}/${concept.toLowerCase().replace(/\s+/g, "-")}`
+                `/coding/${language}/${concept.toLowerCase().replace(/\s+/g, "-")}/questions`
               )
             }
           >
-            <div className="concept-icon">📘</div>
+            <div className="concept-icon"><CandidateIcon name="book" /></div>
             <h2>{concept}</h2>
             <p>20 Coding Problems</p>
             <span>Start →</span>
