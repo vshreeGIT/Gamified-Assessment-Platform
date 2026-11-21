@@ -2,6 +2,8 @@ package com.skillquest.service.impl;
 
 import com.skillquest.dto.UpdateProfileRequest;
 import com.skillquest.dto.UserProfileResponse;
+import com.skillquest.dto.LoginRequest;
+import com.skillquest.dto.RegisterRequest;
 import com.skillquest.entity.Role;
 import com.skillquest.entity.User;
 import com.skillquest.exception.UserNotFoundException;
@@ -21,6 +23,8 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private JwtUtil jwtUtil;
     private UserServiceImpl service;
 
     private static final String EMAIL = "candidate@example.com";
@@ -28,9 +32,9 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        PasswordEncoder encoder = mock(PasswordEncoder.class);
-        JwtUtil jwtUtil = mock(JwtUtil.class);
-        service = new UserServiceImpl(userRepository, encoder, jwtUtil);
+        passwordEncoder = mock(PasswordEncoder.class);
+        jwtUtil = mock(JwtUtil.class);
+        service = new UserServiceImpl(userRepository, passwordEncoder, jwtUtil);
     }
 
     // ── getProfile ──────────────────────────────────────────────────────────
@@ -186,6 +190,51 @@ class UserServiceImplTest {
         UserProfileResponse resp = service.updateProfile(EMAIL, req);
         assertEquals("Bob", resp.getFullName());
         assertEquals("CSE", resp.getDepartment());
+    }
+
+    @Test
+    void publicRegistrationAlwaysCreatesCandidate() {
+        RegisterRequest request = new RegisterRequest();
+        request.setFullName("New Candidate");
+        request.setEmail("new@example.com");
+        request.setPassword("password");
+        request.setRole("candidate");
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        service.register(request);
+
+        verify(userRepository).save(argThat(user -> user.getRole() == Role.CANDIDATE));
+    }
+
+    @Test
+    void publicRegistrationRejectsRecruiterRoleSelection() {
+        RegisterRequest request = new RegisterRequest();
+        request.setFullName("Attempted Recruiter");
+        request.setEmail("recruiter@example.com");
+        request.setPassword("password");
+        request.setRole("RECRUITER");
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> service.register(request));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void existingLoginSupportsProvisionedRecruiterAccounts() {
+        User recruiter = fullUser();
+        recruiter.setRole(Role.RECRUITER);
+        LoginRequest request = new LoginRequest();
+        request.setEmail(EMAIL);
+        request.setPassword("password");
+        when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(recruiter));
+        when(passwordEncoder.matches("password", recruiter.getPassword())).thenReturn(true);
+        when(jwtUtil.generateToken(EMAIL)).thenReturn("token-value");
+
+        var response = service.login(request);
+
+        assertEquals("RECRUITER", response.getRole());
+        assertEquals("token-value", response.getToken());
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────

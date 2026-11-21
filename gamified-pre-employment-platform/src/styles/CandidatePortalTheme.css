@@ -1,0 +1,374 @@
+.candidate-portal-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  width: 238px;
+  min-width: 238px;
+  height: 100vh;
+  min-height: 100vh;
+  flex-direction: column;
+  padding: 22px 15px 15px;
+  border-right: 1px solid rgba(153, 92, 255, 0.45);
+  background: var(--sq-bg-sidebar, rgba(7, 8, 48, 0.96));
+}
+
+.candidate-portal-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 5px 33px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.candidate-portal-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #a97cff;
+  border-radius: 11px;
+  background: var(--sq-gradient-primary, linear-gradient(135deg, #7548ff, #32bde8));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.candidate-portal-brand strong,
+.candidate-portal-brand small {
+  display: block;
+}
+
+.candidate-portal-brand strong {
+  font-size: 17px;
+}
+
+.candidate-portal-brand small {
+  margin-top: 3px;
+  color: #aaa5cd;
+  font-size: 10px;
+}
+
+.candidate-portal-label {
+  margin: 0 9px 9px;
+  color: #827ca8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.candidate-portal-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.candidate-portal-nav-item,
+.candidate-portal-logout {
+  display: flex;
+  min-height: 39px;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 11px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #dcd8ff;
+  font-size: 12px;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.candidate-portal-nav-item svg,
+.candidate-portal-logout svg {
+  width: 17px;
+  height: 17px;
+  color: #b998ff;
+}
+
+.recruiter-nav-item svg {
+  width: 17px;
+  height: 17px;
+  color: #b998ff;
+}
+
+.candidate-portal-nav-item:hover,
+.candidate-portal-nav-item.active {
+  border-color: rgba(166, 97, 255, 0.42);
+  color: #fff;
+  background: linear-gradient(135deg, rgba(109, 53, 217, 0.7), rgba(75, 101, 226, 0.38));
+}
+
+.candidate-portal-logout {
+  margin-top: auto;
+  border-color: rgba(162, 89, 255, 0.28);
+  color: #f2d6ff;
+  background: rgba(18, 15, 71, 0.85);
+}
+
+.candidate-portal-logout:hover {
+  background: rgba(89, 39, 61, 0.8);
+}
+
+.recruiter-sidebar {
+  width: 238px;
+  min-width: 238px;
+}
+
+.recruiter-shell .rq-button,
+.recruiter-shell .rq-small-button {
+  background: var(--sq-gradient-primary);
+}
+
+.recruiter-shell .rq-card,
+.recruiter-shell .rq-metric {
+  background-color: rgba(11, 11, 61, 0.88);
+}
+
+.recruiter-shell .rq-page-header h1 {
+  color: var(--sq-text-primary);
+}
+
+.dashboard-main,
+.badges-main,
+.challenges-main,
+.job-main,
+.leaderboard-main,
+.profile-main {
+  min-width: 0;
+  flex: 1;
+  padding: 28px clamp(17px, 3vw, 42px);
+}
+
+.dashboard-page,
+.badges-page,
+.challenges-page,
+.job-page,
+.leaderboard-page,
+.profile-page {
+  color: #f8f7ff;
+  background:
+    var(--skillquest-bg-overlay),
+    var(--skillquest-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.dashboard-page button,
+.badges-page button,
+.badges-page a[class*="-btn"],
+.challenges-page button,
+.job-page button,
+.job-page a[class*="-btn"],
+.job-page .job-insight-card a,
+.leaderboard-page button,
+.leaderboard-page a[class*="-btn"],
+.leaderboard-page .your-rank-card > a,
+.profile-page button,
+.profile-page a[class*="-btn"],
+.profile-page .match-score-card > a,
+.profile-page .application-heading > a,
+.coding-page button,
+.concept-page button,
+.coding-question-page button,
+.coding-question-list-page button,
+.coding-result-page button {
+  border-color: rgba(143, 106, 224, 0.42);
+  border-radius: 9px;
+  color: #fff;
+  background: var(--sq-gradient-primary, linear-gradient(100deg, #7845ff, #397ce8));
+  font-weight: 700;
+  box-shadow: none;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.dashboard-page button:hover,
+.badges-page button:hover,
+.badges-page a[class*="-btn"]:hover,
+.challenges-page button:hover,
+.job-page button:hover,
+.job-page a[class*="-btn"]:hover,
+.job-page .job-insight-card a:hover,
+.leaderboard-page button:hover,
+.leaderboard-page a[class*="-btn"]:hover,
+.leaderboard-page .your-rank-card > a:hover,
+.profile-page button:hover,
+.profile-page a[class*="-btn"]:hover,
+.profile-page .match-score-card > a:hover,
+.profile-page .application-heading > a:hover,
+.coding-page button:hover,
+.concept-page button:hover,
+.coding-question-page button:hover,
+.coding-question-list-page button:hover,
+.coding-result-page button:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.dashboard-page button:disabled,
+.badges-page button:disabled,
+.challenges-page button:disabled,
+.job-page button:disabled,
+.leaderboard-page button:disabled,
+.profile-page button:disabled,
+.coding-page button:disabled,
+.concept-page button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.dashboard-page .stat-card,
+.dashboard-page .dashboard-panel,
+.badges-page .summary-card,
+.badges-page .badge-progress-panel,
+.badges-page .badge-card,
+.challenges-page .quest-card,
+.job-page .job-card,
+.job-page .job-insight-card,
+.job-page .job-progress-card,
+.leaderboard-page .winner-card,
+.leaderboard-page .rank-panel,
+.leaderboard-page .your-rank-card,
+.profile-page .candidate-info-card,
+.profile-page .score-card,
+.profile-page .overall-score-card,
+.profile-page .career-insights-card,
+.profile-page .match-score-card,
+.profile-page .application-card {
+  border-color: rgba(130, 74, 255, 0.34);
+  border-radius: 13px;
+  background-color: rgba(11, 11, 61, 0.88);
+  box-shadow: inset 0 0 30px rgba(95, 50, 255, 0.035);
+}
+
+.dashboard-page .header-small,
+.badges-page .badges-small-title,
+.challenges-page .challenge-small-title,
+.job-page .job-small-title,
+.leaderboard-page .leaderboard-small-title,
+.profile-page .profile-kicker {
+  color: #b990ff !important;
+}
+
+.candidate-portal-sidebar svg,
+.dashboard-page svg,
+.badges-page svg,
+.challenges-page svg,
+.job-page svg,
+.leaderboard-page svg,
+.profile-page svg,
+.coding-page svg,
+.concept-page svg,
+.coding-result-page svg {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.candidate-preview-notice,
+.leaderboard-preview-note {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid rgba(88, 183, 255, 0.35);
+  border-radius: 9px;
+  color: #c8ebff;
+  background: rgba(27, 58, 105, 0.75);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.candidate-quest-action,
+.candidate-unavailable-action {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border: 1px solid rgba(143, 106, 224, 0.42);
+  border-radius: 9px;
+  color: #fff;
+  background: var(--sq-gradient-primary, linear-gradient(100deg, #7845ff, #397ce8));
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.candidate-unavailable-action {
+  border-color: rgba(143, 106, 224, 0.22);
+  color: var(--sq-text-secondary, #b9c0de);
+  background: rgba(18, 15, 71, 0.85);
+}
+
+.job-page .job-card-bottom .apply-job-btn:disabled {
+  padding: 9px;
+  border: 1px solid rgba(143, 106, 224, 0.22);
+  color: var(--sq-text-secondary, #b9c0de);
+  background: rgba(18, 15, 71, 0.85);
+  font-size: 10px;
+}
+
+.stat-icon svg,
+.challenge-icon svg,
+.badge-icon-circle svg,
+.job-insight-icon svg,
+.job-progress-icon svg,
+.score-icon svg,
+.company-logo svg,
+.language-icon svg,
+.concept-icon svg,
+.result-trophy svg {
+  width: 1em;
+  height: 1em;
+}
+
+@media (max-width: 760px) {
+  .candidate-portal-sidebar {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: auto;
+    padding: 14px 16px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(153, 92, 255, 0.45);
+  }
+
+  .recruiter-sidebar {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+  }
+
+  .candidate-portal-brand {
+    margin: 0 0 13px;
+  }
+
+  .candidate-portal-label {
+    display: none;
+  }
+
+  .candidate-portal-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .candidate-portal-nav-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .candidate-portal-logout {
+    display: none;
+  }
+
+  .dashboard-main,
+  .badges-main,
+  .challenges-main,
+  .job-main,
+  .leaderboard-main,
+  .profile-main {
+    padding: 22px 16px;
+  }
+}

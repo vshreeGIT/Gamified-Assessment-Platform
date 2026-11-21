@@ -18,10 +18,24 @@ function Login() {
 
     try {
       const data = await loginUser({ email, password });
-      const userRole = (data.role || role).toLowerCase();
 
-      if (userRole === "recruiter") {
-        navigate("/recruiter-dashboard");
+      // Always use the role returned by the backend — never the UI toggle.
+      const actualRole = (data.role || "").toLowerCase();
+
+      // Warn when the selected toggle does not match the real account role,
+      // but still redirect correctly so the user is never stuck.
+      if (actualRole !== "admin" && actualRole !== role) {
+        setError(
+          `This account is registered as "${data.role}". Redirecting to the correct portal.`
+        );
+        // Brief pause so the user can read the message before navigating.
+        await new Promise((resolve) => setTimeout(resolve, 1800));
+      }
+
+      if (actualRole === "admin") {
+        navigate("/admin");
+      } else if (actualRole === "recruiter") {
+        navigate("/recruiter/dashboard");
       } else {
         navigate("/candidate-dashboard");
       }

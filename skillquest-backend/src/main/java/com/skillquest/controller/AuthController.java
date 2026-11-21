@@ -2,6 +2,8 @@ package com.skillquest.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
+import java.util.Map;
 
 import com.skillquest.dto.RegisterRequest;
 import com.skillquest.service.UserService;
@@ -32,5 +34,16 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
     return ResponseEntity.ok(userService.login(request));
 
 }
+
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> me(Principal principal) {
+        return ResponseEntity.ok(Map.of("user", userService.getAuthenticatedUser(principal.getName())));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Boolean>> logout() {
+        // JWTs are stateless; the client completes logout by discarding its token.
+        return ResponseEntity.ok(Map.of("success", true));
+    }
 
 }

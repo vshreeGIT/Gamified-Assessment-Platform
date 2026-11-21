@@ -3,9 +3,11 @@ package com.skillquest.service.impl;
 import com.skillquest.dto.*;
 import com.skillquest.entity.TeamworkAssessmentSession;
 import com.skillquest.entity.TeamworkAttempt;
+import com.skillquest.entity.User;
 import com.skillquest.exception.UserNotFoundException;
 import com.skillquest.repository.TeamworkAssessmentSessionRepository;
 import com.skillquest.repository.TeamworkAttemptRepository;
+import com.skillquest.repository.UserRepository;
 import com.skillquest.service.TeamworkService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,13 @@ public class TeamworkServiceImpl implements TeamworkService {
     public static final int PASS_THRESHOLD = 70;
     private final TeamworkAssessmentSessionRepository sessionRepository;
     private final TeamworkAttemptRepository attemptRepository;
+    private final UserRepository userRepository;
 
     public TeamworkServiceImpl(TeamworkAssessmentSessionRepository sessionRepository,
-            TeamworkAttemptRepository attemptRepository) {
+            TeamworkAttemptRepository attemptRepository, UserRepository userRepository) {
         this.sessionRepository = sessionRepository;
         this.attemptRepository = attemptRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -75,8 +79,9 @@ public class TeamworkServiceImpl implements TeamworkService {
         int score = (int) questions().stream().filter(question -> question.answer().equals(answers.get(question.id()))).count();
         int total = questions().size();
         int accuracy = Math.round(score * 100f / total);
+        int earnedXp = calculateXp(accuracy);
         TeamworkAttempt attempt = TeamworkAttempt.builder().id(key).userEmail(email).submissionKey(key)
-                .score(score).totalQuestions(total).accuracy(accuracy).passed(accuracy >= PASS_THRESHOLD)
+            .score(score).totalQuestions(total).accuracy(accuracy).earnedXp(earnedXp).passed(accuracy >= PASS_THRESHOLD)
                 .answers(new HashMap<>(answers)).completedAt(LocalDateTime.now()).build();
         try {
             attemptRepository.insert(attempt);
@@ -84,6 +89,12 @@ public class TeamworkServiceImpl implements TeamworkService {
             return attemptRepository.findByUserEmailAndSubmissionKey(email, key)
                     .map(saved -> result(saved, "This Teamwork attempt was already recorded.")).orElseThrow(() -> duplicate);
         }
+            User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+            user.setXp(user.getXp() + earnedXp);
+            user.setLevel((user.getXp() / 500) + 1);
+            user.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
         session.setStatus("COMPLETED");
         sessionRepository.save(session);
         return result(attempt, attempt.isPassed() ? "Teamwork Mission passed." : "Attempt saved. Review the scenarios and try again.");
@@ -107,7 +118,15 @@ public class TeamworkServiceImpl implements TeamworkService {
     private TeamworkResultDto result(TeamworkAttempt attempt, String message) {
         return TeamworkResultDto.builder().attemptId(attempt.getId()).score(attempt.getScore())
                 .totalQuestions(attempt.getTotalQuestions()).accuracy(attempt.getAccuracy())
-                .passed(attempt.isPassed()).message(message).build();
+                .earnedXp(attempt.getEarnedXp()).passed(attempt.isPassed()).message(message).build();
+    }
+
+    private int calculateXp(int accuracy) {
+        if (accuracy >= 90) return 90;
+        if (accuracy >= 80) return Math.round(90 * 0.85f);
+        if (accuracy >= PASS_THRESHOLD) return Math.round(90 * 0.70f);
+        if (accuracy >= 50) return Math.round(90 * 0.40f);
+        return 20;
     }
 
     private String sessionId(String email) {

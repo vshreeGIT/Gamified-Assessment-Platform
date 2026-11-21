@@ -79,6 +79,7 @@ function CandidateDashboard() {
   ];
 
   const recentAttempts = data?.recentAttempts || [];
+  const assignedAssessments = data?.assignedAssessments || [];
   const communicationProEarned = Boolean(data?.badges?.some(
     (badge) => badge.name === "Communication Pro" && badge.earned
   ));
@@ -274,6 +275,63 @@ function CandidateDashboard() {
                       {att.passed ? "PASSED" : "NEEDS PRACTICE"}
                     </span>
                   </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {assignedAssessments.length > 0 && (
+          <section className="dashboard-panel" style={{ marginBottom: "22px" }}>
+            <div className="panel-title">
+              <div>
+                <p className="header-small">RECRUITER ASSESSMENTS</p>
+                <h2>Assigned to You</h2>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+              {assignedAssessments.map((a) => (
+                <div
+                  key={a.assignmentId}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "14px 16px",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    borderRadius: "10px",
+                    border: "1px solid rgba(162, 101, 255, 0.3)",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                  }}
+                >
+                  <div>
+                    <b style={{ color: "#fff", fontSize: "15px" }}>{a.title}</b>
+                    <p style={{ margin: "4px 0 0", color: "#cbc6ec", fontSize: "13px" }}>
+                      {a.technology} &bull; {a.durationMinutes} min &bull; Pass: {a.passingScore}%
+                    </p>
+                  </div>
+                  <span
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: a.status === "completed" ? "#55efb7" : "#f3d164",
+                      border: `1px solid ${a.status === "completed" ? "rgba(68,222,162,0.5)" : "rgba(243,209,100,0.45)"}`,
+                      background: a.status === "completed" ? "rgba(68,222,162,0.12)" : "rgba(243,209,100,0.12)",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {a.status || "in_progress"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/assessment/${encodeURIComponent(a.assessmentId)}`)}
+                  >
+                    {a.status === "completed" ? "Review / Retry" : "Start Assessment"}
+                  </button>
                 </div>
               ))}
             </div>

@@ -22,6 +22,7 @@ public class TeamworkAttempt {
     private int score;
     private int totalQuestions;
     private int accuracy;
+    private int earnedXp;
     private boolean passed;
     private Map<String, String> answers;
     private LocalDateTime completedAt;

@@ -3,8 +3,10 @@ package com.skillquest.service.impl;
 import com.skillquest.dto.TeamworkSubmitRequest;
 import com.skillquest.entity.TeamworkAssessmentSession;
 import com.skillquest.entity.TeamworkAttempt;
+import com.skillquest.entity.User;
 import com.skillquest.repository.TeamworkAssessmentSessionRepository;
 import com.skillquest.repository.TeamworkAttemptRepository;
+import com.skillquest.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,13 +23,15 @@ class TeamworkServiceImplTest {
     private static final String EMAIL = "team@example.test";
     private TeamworkAssessmentSessionRepository sessions;
     private TeamworkAttemptRepository attempts;
+    private UserRepository users;
     private TeamworkServiceImpl service;
 
     @BeforeEach
     void setup() {
         sessions = mock(TeamworkAssessmentSessionRepository.class);
         attempts = mock(TeamworkAttemptRepository.class);
-        service = new TeamworkServiceImpl(sessions, attempts);
+        users = mock(UserRepository.class);
+        service = new TeamworkServiceImpl(sessions, attempts, users);
         when(sessions.save(any())).thenAnswer(call -> call.getArgument(0));
         when(sessions.findById(anyString())).thenReturn(Optional.empty());
         when(attempts.findByUserEmailAndSubmissionKey(anyString(), anyString())).thenReturn(Optional.empty());
@@ -40,22 +44,30 @@ class TeamworkServiceImplTest {
     }
 
     @Test
-    void serverScoresAndSavesPassingAttemptWithoutChangingXp() {
+    void serverScoresAndAwardsXpForPassingAttempt() {
         var quiz = service.start(EMAIL);
         TeamworkAssessmentSession session = TeamworkAssessmentSession.builder()
                 .id(sessionId()).userEmail(EMAIL).submissionKey(quiz.getSubmissionKey()).status("ACTIVE").build();
         when(sessions.findById(sessionId())).thenReturn(Optional.of(session));
+        User user = new User();
+        user.setEmail(EMAIL);
+        user.setLevel(1);
+        when(users.findByEmail(EMAIL)).thenReturn(Optional.of(user));
         TeamworkSubmitRequest request = request(quiz.getSubmissionKey(), Map.of("T1", "C", "T2", "B", "T3", "C", "T4", "A", "T5", "A"));
 
         var result = service.submit(EMAIL, request);
 
         assertEquals(4, result.getScore());
         assertEquals(80, result.getAccuracy());
+        assertEquals(77, result.getEarnedXp());
         assertTrue(result.isPassed());
         ArgumentCaptor<TeamworkAttempt> captor = ArgumentCaptor.forClass(TeamworkAttempt.class);
         verify(attempts).insert(captor.capture());
         assertTrue(captor.getValue().isPassed());
         assertEquals(4, captor.getValue().getScore());
+        assertEquals(77, captor.getValue().getEarnedXp());
+        assertEquals(77, user.getXp());
+        verify(users).save(user);
         verify(sessions).save(argThat(saved -> "COMPLETED".equals(saved.getStatus())));
     }
 
