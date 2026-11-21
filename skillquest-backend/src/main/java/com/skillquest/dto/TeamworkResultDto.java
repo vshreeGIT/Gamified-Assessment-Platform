@@ -14,6 +14,7 @@ public class TeamworkResultDto {
     private int score;
     private int totalQuestions;
     private int accuracy;
+    private int earnedXp;
     private boolean passed;
     private String message;
 }

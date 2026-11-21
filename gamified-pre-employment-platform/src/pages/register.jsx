@@ -41,7 +41,7 @@ function Register() {
 
       const userRole = (authData.role || formData.role).toLowerCase();
       if (userRole === "recruiter") {
-        navigate("/recruiter-dashboard");
+        navigate("/recruiter/dashboard");
       } else {
         navigate("/candidate-dashboard");
       }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getJobMatches, getProfileStrength, saveJob, unsaveJob } from "../../services/jobService";
+import { applyToJob, getJobMatches, getMyJobApplications, getProfileStrength, saveJob, unsaveJob } from "../../services/jobService";
 import { isAuthenticated, logoutUser } from "../../services/authService";
 import "../../styles/JobMatches.css";
 
@@ -41,6 +41,10 @@ export default function JobMatches() {
   const [savingIds, setSavingIds] = useState(new Set());
   const [saveError, setSaveError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [activeView, setActiveView] = useState("jobs");
+  const [applying, setApplying] = useState(false);
+  const [applyError, setApplyError] = useState("");
 
   // ── load data ──────────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
@@ -51,12 +55,14 @@ export default function JobMatches() {
     try {
       setLoading(true);
       setError("");
-      const [jobsData, strengthData] = await Promise.all([
+      const [jobsData, strengthData, applicationsData] = await Promise.all([
         getJobMatches(),
         getProfileStrength(),
+        getMyJobApplications(),
       ]);
       setJobs(jobsData || []);
       setProfileStrength(strengthData);
+      setApplications(applicationsData || []);
     } catch (err) {
       if (
         err.message?.toLowerCase().includes("401") ||
@@ -108,6 +114,24 @@ export default function JobMatches() {
     }
   }
 
+  async function handleApply(job) {
+    if (!job.canApply || job.applied || applying) return;
+    setApplying(true);
+    setApplyError("");
+    try {
+      const application = await applyToJob(job.id);
+      setApplications((current) => [application, ...current.filter((item) => item.id !== application.id)]);
+      setApplyError("");
+      const updatedJob = { ...job, applied: true, applicationStatus: application.status };
+      setJobs((current) => current.map((item) => item.id === job.id ? updatedJob : item));
+      setSelectedJob(updatedJob);
+    } catch (requestError) {
+      setApplyError(requestError.message || "Unable to apply for this job.");
+    } finally {
+      setApplying(false);
+    }
+  }
+
   // ── filtering ──────────────────────────────────────────────────────────────
   const filtered = jobs
     .filter((j) => matchesFilter(j, activeFilter))
@@ -116,8 +140,7 @@ export default function JobMatches() {
 
   // ── profile strength ───────────────────────────────────────────────────────
   const strength = profileStrength?.strength ?? 0;
-  const profileIncomplete =
-    profileStrength !== null && !profileStrength.hasDepartment;
+  const verifiedSkillScoresAvailable = jobs.some((job) => job.skillBreakdown?.some((skill) => skill.candidateScore !== null));
 
   // ── render ─────────────────────────────────────────────────────────────────
   return (
@@ -155,8 +178,7 @@ export default function JobMatches() {
             <p className="job-small-title">CAREER QUEST</p>
             <h1>Your Job Matches 💼</h1>
             <p>
-              These opportunities are matched using your skills, badges, and
-              challenge performance.
+              Recommendations use verified challenge and assessment scores weighted against each job’s required skills.
             </p>
           </div>
 
@@ -181,15 +203,11 @@ export default function JobMatches() {
         </header>
 
         {/* Profile incomplete warning */}
-        {profileIncomplete && (
+        {profileStrength && !verifiedSkillScoresAvailable && (
           <div className="job-profile-warning" role="alert">
             <span>⚠️</span>
             <div>
-              <b>Your department is not set.</b> Match scores are based on your
-              department and XP.{" "}
-              <Link to="/candidate-profile" className="job-profile-warning-link">
-                Complete your profile →
-              </Link>
+              <b>No verified skill scores are available yet.</b> Unrated job requirements contribute zero to match scores. Complete scored challenges or recruiter assessments to build evidence.
             </div>
           </div>
         )}
@@ -205,6 +223,17 @@ export default function JobMatches() {
           </div>
           <Link to="/challenges">View Challenges</Link>
         </section>
+
+        <div className="job-view-tabs" role="group" aria-label="Job views">
+          <button type="button" className={activeView === "jobs" ? "active" : ""}
+            onClick={() => { setActiveView("jobs"); document.getElementById("job-search-row")?.scrollIntoView({ behavior: "smooth" }); }}>
+            Find jobs
+          </button>
+          <button type="button" className={activeView === "applications" ? "active" : ""}
+            onClick={() => { setActiveView("applications"); document.getElementById("my-applications")?.scrollIntoView({ behavior: "smooth" }); }}>
+            My applications · {applications.length}
+          </button>
+        </div>
 
         {/* Load error */}
         {error && (
@@ -231,7 +260,7 @@ export default function JobMatches() {
         )}
 
         {/* Search + filter row */}
-        <div className="job-search-row">
+        <div className="job-search-row" id="job-search-row">
           <input
             className="job-search-input"
             type="search"
@@ -318,6 +347,29 @@ export default function JobMatches() {
           </section>
         )}
 
+        <section className="job-applications-section" id="my-applications">
+          <div className="job-applications-heading">
+            <div><p className="job-small-title">YOUR RECRUITMENT ACTIVITY</p><h2>My applications</h2></div>
+            <div className="job-applications-refresh"><span>{applications.length} submitted</span><button type="button" onClick={loadData}>Refresh status</button></div>
+          </div>
+          {applications.length === 0 ? (
+            <div className="job-empty job-applications-empty">You have not applied to any recruiter-managed jobs yet.</div>
+          ) : (
+            <div className="job-application-list">
+              {applications.map((application) => (
+                <article className="job-application-row" key={application.id}>
+                  <div className="job-application-title"><b>{application.jobTitle}</b><span>{application.company}</span></div>
+                  <span className={`job-application-status ${application.status?.toLowerCase() || "applied"}`}>
+                    {application.status?.replaceAll("_", " ") || "APPLIED"}
+                  </span>
+                  <span className="job-application-match">{application.matchScore}% match</span>
+                  <time>{application.appliedAt ? new Date(application.appliedAt).toLocaleDateString() : "—"}</time>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* XP progress card */}
         {profileStrength && (
           <section className="job-progress-card">
@@ -354,6 +406,9 @@ export default function JobMatches() {
           job={selectedJob}
           saving={savingIds.has(selectedJob.id)}
           onSave={() => handleSaveToggle(selectedJob)}
+          onApply={() => handleApply(selectedJob)}
+          applying={applying}
+          applyError={applyError}
           onClose={() => setSelectedJob(null)}
           profileStrength={profileStrength}
         />
@@ -375,6 +430,7 @@ function JobCard({ job, saving, onSave, onView }) {
           <b>{job.matchScore}%</b>
         </div>
       </div>
+      {job.applied && <span className="job-applied-chip">Applied · {job.applicationStatus?.replaceAll("_", " ") || "APPLIED"}</span>}
 
       <p className="company-name">{job.company}</p>
       <h2>{job.title}</h2>
@@ -420,7 +476,7 @@ function JobCard({ job, saving, onSave, onView }) {
 }
 
 // ── Job detail modal ──────────────────────────────────────────────────────────
-function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
+function JobDetailModal({ job, saving, onSave, onApply, applying, applyError, onClose, profileStrength }) {
   useEffect(() => {
     function onKey(e) {
       if (e.key === "Escape") onClose();
@@ -475,12 +531,15 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
           <span>⏳ {job.employmentType}</span>
           {job.salary && <span>💰 {job.salary}</span>}
           {job.experienceLevel && <span>🎓 {job.experienceLevel}</span>}
+          {job.minimumExperienceYears > 0 && <span>Minimum {job.minimumExperienceYears} years</span>}
         </div>
 
         {/* Sample listing notice */}
-        <div className="job-sample-notice" style={{ marginTop: 12 }}>
-          📋 Sample listing — illustrative only, not a verified live vacancy.
-        </div>
+        {!job.canApply && !job.applicationUrl && (
+          <div className="job-sample-notice" style={{ marginTop: 12 }}>
+            Informational listing · applications are not managed through SkillQuest.
+          </div>
+        )}
 
         {/* Description */}
         {job.description && (
@@ -536,9 +595,9 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
         {/* Skills to develop */}
         {job.missingSkills?.length > 0 && (
           <div className="job-modal-section">
-            <h3>Skills to Develop</h3>
+            <h3>Unassessed required skills</h3>
             <p style={{ color: "#cbc6ec", fontSize: 13, margin: "0 0 8px" }}>
-              Complete challenges to earn XP and unlock these skills.
+              No scored challenge or assessment evidence is available for these skills yet. They receive zero match credit.
             </p>
             <div className="job-skills">
               {job.missingSkills.map((s) => (
@@ -550,13 +609,40 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
           </div>
         )}
 
+        {job.skillGaps?.length > 0 && (
+          <div className="job-modal-section">
+            <h3>Skill gaps</h3>
+            <div className="job-skills">
+              {job.skillGaps.map((skill) => {
+                const evidence = job.skillBreakdown?.find((item) => item.skill === skill);
+                return <span key={skill} className="skill-missing">{skill} · {evidence?.candidateScore ?? "Unrated"}{evidence?.candidateScore !== null && evidence?.candidateScore !== undefined ? "%" : ""}</span>;
+              })}
+            </div>
+          </div>
+        )}
+
+        {job.skillBreakdown?.length > 0 && (
+          <div className="job-modal-section">
+            <h3>Verified skill evidence</h3>
+            <p className="job-match-basis-text">{job.matchExplanation}</p>
+            <div className="job-skill-breakdown">
+              {job.skillBreakdown.map((item) => (
+                <div className="job-skill-breakdown-row" key={item.skill}>
+                  <span>{item.skill}<small>Weight {item.weight}</small></span>
+                  <b>{item.candidateScore === null ? "Unrated" : `${item.candidateScore}%`}</b>
+                  <small>{item.evidence}</small>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Match basis — explains how the score was calculated */}
         {profileStrength && (
           <div className="job-modal-section job-match-basis">
             <h3>How your match was calculated</h3>
             <p className="job-match-basis-text">
-              {profileStrength.skillBasis ||
-                "Skills are inferred from your department and XP."}
+              {job.matchExplanation || "Verified challenge and assessment scores are compared with job skill weights; unrated skills contribute zero."}
             </p>
             {profileStrength.inferredSkills?.length > 0 && (
               <>
@@ -578,9 +664,9 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
                 </div>
               </>
             )}
-            {!profileStrength.hasDepartment && (
+            {!profileStrength.hasSkills && (
               <p className="job-match-basis-warning">
-                ⚠️ Set your department in your{" "}
+                ⚠️ Add self-declared skills in your{" "}
                 <Link to="/candidate-profile" className="job-profile-warning-link">
                   profile
                 </Link>{" "}
@@ -600,7 +686,15 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
             {saving ? "…" : job.saved ? "♥ Saved" : "♡ Save"}
           </button>
 
-          {job.applicationUrl ? (
+          {job.canApply ? (
+            <button
+              className="apply-job-btn"
+              onClick={onApply}
+              disabled={applying || job.applied}
+            >
+              {applying ? "Submitting…" : job.applied ? `Applied · ${job.applicationStatus?.replaceAll("_", " ") || "APPLIED"}` : "Apply through SkillQuest"}
+            </button>
+          ) : job.applicationUrl ? (
             <a
               href={job.applicationUrl}
               target="_blank"
@@ -618,10 +712,11 @@ function JobDetailModal({ job, saving, onSave, onClose, profileStrength }) {
             </a>
           ) : (
             <div className="job-no-apply-notice">
-              No application link — this is a sample listing.
+              This listing does not accept applications through SkillQuest.
             </div>
           )}
         </div>
+        {applyError && <p className="job-error-banner" role="alert">{applyError}</p>}
       </div>
     </div>
   );

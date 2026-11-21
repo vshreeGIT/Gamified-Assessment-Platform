@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getChallengeProgress } from "../../services/challengeProgressService";
+import { logoutUser } from "../../services/authService";
 import "../../styles/Challenges.css";
 
 function Challenges() {
@@ -8,6 +9,7 @@ function Challenges() {
   const [progress, setProgress] = useState(null);
   const [progressLoading, setProgressLoading] = useState(true);
   const [progressError, setProgressError] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All Challenges");
 
   useEffect(() => {
     getChallengeProgress().then(setProgress).catch((error) => setProgressError(error.message || "Unable to verify quest progress."))
@@ -88,6 +90,10 @@ function Challenges() {
     if (challenge.route) navigate(challenge.route);
   };
 
+  const visibleChallenges = challenges.filter((challenge) =>
+    activeFilter === "All Challenges" || challenge.category === activeFilter
+  );
+
   return (
     <div className="challenges-page">
       <aside className="challenge-sidebar">
@@ -106,7 +112,7 @@ function Challenges() {
           <Link to="/candidate-profile">👤 Profile</Link>
         </nav>
 
-        <Link to="/" className="challenge-logout">
+        <Link to="/login" onClick={logoutUser} className="challenge-logout">
           🚪 Logout
         </Link>
       </aside>
@@ -126,16 +132,16 @@ function Challenges() {
         </header>
 
         <section className="challenge-filter-row">
-          <button className="filter-active">All Challenges</button>
-          <button>Aptitude</button>
-          <button>Soft Skills</button>
-          <button>Technical</button>
-          <button>Analytics</button>
-          <button>Interview</button>
+          {["All Challenges", "Aptitude", "Soft Skills", "Technical", "Analytics", "Interview"].map((filter) => (
+            <button key={filter} className={activeFilter === filter ? "filter-active" : ""}
+              type="button" aria-pressed={activeFilter === filter} onClick={() => setActiveFilter(filter)}>
+              {filter}
+            </button>
+          ))}
         </section>
 
         <section className="challenge-grid">
-          {challenges.map((challenge) => {
+          {visibleChallenges.map((challenge) => {
             const state = challengeState(challenge, progress, progressLoading);
             return (
             <div
@@ -183,7 +189,7 @@ function challengeState(challenge, progress, loading) {
   if (challenge.id !== "interview") {
     if (loading || !progress?.quests?.[challenge.id]) return "AVAILABLE";
     const state = progress.quests[challenge.id].status;
-    return state === "LOCKED" ? "AVAILABLE" : state;
+    return state;
   }
   if (loading || !progress?.quests?.[challenge.id]) return "LOCKED";
   return progress.quests[challenge.id].status;

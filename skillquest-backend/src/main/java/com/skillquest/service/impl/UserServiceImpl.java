@@ -10,6 +10,7 @@ import com.skillquest.dto.UserProfileResponse;
 import com.skillquest.dto.LoginRequest;
 import com.skillquest.dto.LoginResponse;
 import com.skillquest.dto.RegisterRequest;
+import com.skillquest.dto.AuthUserDto;
 import com.skillquest.entity.Role;
 import com.skillquest.entity.User;
 import com.skillquest.exception.DuplicateEmailException;
@@ -54,11 +55,11 @@ public class UserServiceImpl implements UserService {
         user.setCollege(request.getCollege());
         user.setDepartment(request.getDepartment());
 
-        if (request.getRole() != null && request.getRole().equalsIgnoreCase("RECRUITER")) {
-            user.setRole(Role.RECRUITER);
-        } else {
-            user.setRole(Role.CANDIDATE);
+        if (request.getRole() != null && !request.getRole().isBlank()
+                && !request.getRole().equalsIgnoreCase("CANDIDATE")) {
+            throw new IllegalArgumentException("Recruiter and administrator accounts must be provisioned by an administrator.");
         }
+        user.setRole(Role.CANDIDATE);
 
         user.setXp(0);
         user.setLevel(1);
@@ -100,6 +101,14 @@ public UserProfileResponse getProfile(String email) {
 
     return toResponse(user);
 }
+
+    @Override
+    public AuthUserDto getAuthenticatedUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Role role = user.getRole() == null ? Role.CANDIDATE : user.getRole();
+        return new AuthUserDto(user.getId(), user.getFullName(), user.getEmail(), role.name());
+    }
 
     @Override
     public UserProfileResponse updateProfile(String email, UpdateProfileRequest request) {

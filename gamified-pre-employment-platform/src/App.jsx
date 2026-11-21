@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
+import RecruiterAssessment from "./pages/candidate/RecruiterAssessment";
 import Challenges from "./pages/candidate/Challenges";
 import Badges from "./pages/candidate/Badges";
 import Leaderboard from "./pages/candidate/Leaderboard";
@@ -14,7 +15,6 @@ import CodingConcept from "./pages/candidate/coding/CodingConcept";
 import CodingDifficulty from "./pages/candidate/coding/CodingDifficulty";
 import CodingQuestion from "./pages/candidate/coding/CodingQuestion";
 
-import AptitudeHome from "./pages/candidate/aptitude/AptitudeHome";
 import CommunicationHome from "./pages/candidate/communication/CommunicationHome";
 import DataDetective from "./pages/candidate/DataDetective";
 import TeamworkMission from "./pages/candidate/TeamworkMission";
@@ -24,6 +24,60 @@ import ReasoningHome from "./pages/candidate/reasoning/ReasoningHome";
 import ReasoningDifficulty from "./pages/candidate/reasoning/ReasoningDifficulty";
 import ReasoningQuestion from "./pages/candidate/reasoning/ReasoningQuestion";
 import ReasoningResult from "./pages/candidate/reasoning/ReasoningResult";
+import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
+import RecruiterAssessments from "./pages/recruiter/RecruiterAssessments";
+import RecruiterAssessmentForm from "./pages/recruiter/RecruiterAssessmentForm";
+import RecruiterAssessmentDetail from "./pages/recruiter/RecruiterAssessmentDetail";
+import RecruiterCandidates from "./pages/recruiter/RecruiterCandidates";
+import RecruiterCandidateDetail from "./pages/recruiter/RecruiterCandidateDetail";
+import RecruiterResults from "./pages/recruiter/RecruiterResults";
+import RecruiterAnalytics from "./pages/recruiter/RecruiterAnalytics";
+import RecruiterSettings from "./pages/recruiter/RecruiterSettings";
+import RecruiterJobs from "./pages/recruiter/RecruiterJobs";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { getCurrentUser, isAuthenticated } from "./services/authService";
+
+function RequireAdmin() {
+  const user = getCurrentUser();
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if ((user?.role || "").toLowerCase() !== "admin") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
+}
+
+function RequireRecruiter() {
+  const user = getCurrentUser();
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if ((user?.role || "").toLowerCase() !== "recruiter") {
+    return <Navigate to="/candidate-dashboard" replace />;
+  }
+
+  return <Outlet />;
+}
+
+function RequireCandidate() {
+  const user = getCurrentUser();
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if ((user?.role || "").toLowerCase() !== "candidate") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
+}
 
 function App() {
   return (
@@ -32,8 +86,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/recruiter-dashboard" element={<Navigate to="/recruiter/dashboard" replace />} />
 
         <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
+        <Route path="/assessment/:assessmentId" element={<RequireCandidate />}>
+          <Route index element={<RecruiterAssessment />} />
+        </Route>
         <Route path="/challenges" element={<Challenges />} />
         <Route path="/badges" element={<Badges />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
@@ -51,7 +109,7 @@ function App() {
           element={<CodingQuestion />}
         />
 
-        <Route path="/aptitude" element={<AptitudeHome />} />
+        <Route path="/aptitude" element={<Navigate to="/reasoning" replace />} />
         <Route path="/communication/:subdivisionId" element={<CommunicationHome />} />
         <Route path="/communication" element={<CommunicationHome />} />
         <Route path="/data-detective" element={<DataDetective />} />
@@ -81,6 +139,25 @@ function App() {
           path="/reasoning/result"
           element={<ReasoningResult />}
         />
+
+        <Route path="/admin" element={<RequireAdmin />}>
+          <Route index element={<AdminDashboard />} />
+        </Route>
+
+        <Route path="/recruiter" element={<RequireRecruiter />}>
+          <Route path="dashboard" element={<RecruiterDashboard />} />
+          <Route path="jobs" element={<RecruiterJobs />} />
+          <Route path="assessments" element={<RecruiterAssessments />} />
+          <Route path="assessments/create" element={<RecruiterAssessmentForm />} />
+          <Route path="assessments/:assessmentId/edit" element={<RecruiterAssessmentForm />} />
+          <Route path="assessments/:assessmentId" element={<RecruiterAssessmentDetail />} />
+          <Route path="create-assessment" element={<Navigate to="/recruiter/assessments/create" replace />} />
+          <Route path="candidates" element={<RecruiterCandidates />} />
+          <Route path="candidates/:candidateId" element={<RecruiterCandidateDetail />} />
+          <Route path="results" element={<RecruiterResults />} />
+          <Route path="analytics" element={<RecruiterAnalytics />} />
+          <Route path="settings" element={<RecruiterSettings />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

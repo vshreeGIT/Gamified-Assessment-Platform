@@ -115,7 +115,7 @@ function TeamworkMission() {
       {result && <section className="dashboard-panel teamwork-panel teamwork-result">
         <p className="header-small">TEAMWORK ATTEMPT SAVED</p><h1>{result.passed ? "Teamwork Mission Passed" : "Keep Practicing"}</h1>
         <div className={`teamwork-result-state ${result.passed ? "passed" : "needs-practice"}`}>{result.passed ? "PASSED" : "ATTEMPTED"} · {result.accuracy}%</div>
-        <div className="communication-result-metrics"><div><strong>{result.score}/{result.totalQuestions}</strong><span>Scenarios</span></div><div><strong>{result.accuracy}%</strong><span>Accuracy</span></div></div>
+        <div className="communication-result-metrics"><div><strong>{result.score}/{result.totalQuestions}</strong><span>Scenarios</span></div><div><strong>{result.accuracy}%</strong><span>Accuracy</span></div><div><strong>+{result.earnedXp ?? 0} XP</strong><span>Earned</span></div></div>
         <p className="teamwork-intro">Complete the Teamwork Mission assessment. A saved attempt contributes to Interview Battle eligibility.</p>
         <div className="teamwork-actions"><button className="teamwork-primary" onClick={start}>Try Again</button><button className="teamwork-secondary" onClick={() => navigate("/challenges")}>Return to Challenges</button></div>
       </section>}

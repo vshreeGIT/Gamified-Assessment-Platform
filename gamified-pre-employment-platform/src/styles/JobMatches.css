@@ -708,3 +708,192 @@
   font-size: 13px;
   text-align: center;
 }
+
+.job-view-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.job-view-tabs button {
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(162, 101, 255, 0.35);
+  border-radius: 9px;
+  color: #cbc6ec;
+  background: rgba(15, 16, 73, 0.6);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.job-view-tabs button.active {
+  border-color: rgba(162, 101, 255, 0.65);
+  color: #fff;
+  background: linear-gradient(135deg, rgba(109, 53, 217, 0.7), rgba(75, 101, 226, 0.38));
+}
+
+.job-applied-chip {
+  display: inline-flex;
+  margin: 6px 0 0;
+  padding: 5px 8px;
+  border: 1px solid rgba(68, 222, 162, 0.4);
+  border-radius: 8px;
+  color: #55efb7;
+  background: rgba(68, 222, 162, 0.08);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.job-skill-breakdown {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.job-skill-breakdown-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 70px minmax(0, 2fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(162, 101, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #eeeaff;
+  font-size: 12px;
+}
+
+.job-skill-breakdown-row span small {
+  display: block;
+  margin-top: 3px;
+  color: #928cb9;
+  font-size: 10px;
+}
+
+.job-skill-breakdown-row > b {
+  color: #ffd84c;
+  text-align: right;
+}
+
+.job-skill-breakdown-row > small {
+  color: #aaa5cd;
+  font-size: 10px;
+}
+
+.job-applications-section {
+  margin-top: 28px;
+}
+
+.job-applications-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.job-applications-heading h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.job-applications-heading > span {
+  color: #aaa5cd;
+  font-size: 11px;
+}
+
+.job-applications-refresh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.job-applications-refresh button {
+  padding: 7px 10px;
+  border: 1px solid rgba(162, 101, 255, 0.35);
+  border-radius: 8px;
+  color: #d7c3ff;
+  background: rgba(15, 16, 73, 0.65);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.job-application-list {
+  display: grid;
+  gap: 9px;
+}
+
+.job-application-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(100px, 1fr) 100px 100px;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 15px;
+  border: 1px solid rgba(130, 74, 255, 0.3);
+  border-radius: 11px;
+  background: rgba(11, 11, 61, 0.78);
+}
+
+.job-application-title b,
+.job-application-title span {
+  display: block;
+}
+
+.job-application-title b {
+  color: #fff;
+  font-size: 13px;
+}
+
+.job-application-title span,
+.job-application-row time {
+  margin-top: 4px;
+  color: #aaa5cd;
+  font-size: 11px;
+}
+
+.job-application-status {
+  width: fit-content;
+  padding: 5px 8px;
+  border: 1px solid rgba(243, 209, 100, 0.4);
+  border-radius: 8px;
+  color: #f3d164;
+  background: rgba(243, 209, 100, 0.08);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.job-application-status.shortlisted { color: #55efb7; border-color: rgba(68, 222, 162, 0.4); background: rgba(68, 222, 162, 0.08); }
+.job-application-status.rejected { color: #ff9fa6; border-color: rgba(255, 120, 136, 0.4); background: rgba(255, 120, 136, 0.08); }
+.job-application-status.in_review { color: #8db4ff; border-color: rgba(93, 140, 255, 0.4); background: rgba(93, 140, 255, 0.08); }
+
+.job-application-match {
+  color: #d7c3ff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.job-applications-empty {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .job-application-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .job-application-title {
+    grid-column: 1 / -1;
+  }
+
+  .job-skill-breakdown-row {
+    grid-template-columns: minmax(0, 1fr) 70px;
+  }
+
+  .job-skill-breakdown-row > small {
+    grid-column: 1 / -1;
+  }
+}

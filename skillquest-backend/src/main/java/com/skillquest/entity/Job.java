@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "jobs")
@@ -26,4 +29,10 @@ public class Job {
     private List<String> requiredSkills;
     private List<String> preferredSkills;
     private String applicationUrl;  // null = sample listing
+    private String recruiterEmail;
+    private String status;
+    private int minimumExperienceYears;
+    private Map<String, Integer> skillWeights = new LinkedHashMap<>();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

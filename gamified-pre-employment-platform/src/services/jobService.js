@@ -45,3 +45,11 @@ export function saveJob(jobId) {
 export function unsaveJob(jobId) {
   return request(`/jobs/${jobId}/save`, { method: "DELETE" });
 }
+
+export function applyToJob(jobId) {
+  return request(`/jobs/${encodeURIComponent(jobId)}/applications`, { method: "POST" });
+}
+
+export function getMyJobApplications() {
+  return request("/jobs/applications");
+}

@@ -3,7 +3,9 @@ package com.skillquest.controller;
 import com.skillquest.dto.JobMatchDto;
 import com.skillquest.dto.ProfileStrengthDto;
 import com.skillquest.service.JobService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -14,6 +16,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/jobs")
+@PreAuthorize("hasRole('CANDIDATE')")
 public class JobController {
 
     private final JobService jobService;
@@ -60,5 +63,15 @@ public class JobController {
     public ResponseEntity<Map<String, String>> unsaveJob(@PathVariable String jobId, Principal principal) {
         jobService.unsaveJob(principal.getName(), jobId);
         return ResponseEntity.ok(Map.of("status", "unsaved"));
+    }
+
+    @PostMapping("/{jobId}/applications")
+    public ResponseEntity<?> applyToJob(@PathVariable String jobId, Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(jobService.applyToJob(principal.getName(), jobId));
+    }
+
+    @GetMapping("/applications")
+    public ResponseEntity<?> applications(Principal principal) {
+        return ResponseEntity.ok(jobService.getCandidateApplications(principal.getName()));
     }
 }

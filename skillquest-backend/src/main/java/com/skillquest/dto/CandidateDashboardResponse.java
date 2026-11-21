@@ -35,6 +35,7 @@ public class CandidateDashboardResponse {
     private int communicationAttemptsCount;
     private int communicationXp;
     private int communicationCompletedSubdivisions;
+    private List<Map<String, Object>> assignedAssessments;
     private int dataDetectiveProgress;
     private Map<String, Integer> dataDetectiveProgressByInvestigation;
     private int dataDetectiveAttemptsCount;

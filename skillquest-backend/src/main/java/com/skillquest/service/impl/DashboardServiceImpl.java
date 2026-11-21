@@ -5,15 +5,23 @@ import com.skillquest.dto.CandidateDashboardResponse;
 import com.skillquest.dto.LeaderboardItemDto;
 import com.skillquest.dto.RecentAttemptDto;
 import com.skillquest.entity.CommunicationAttempt;
+import com.skillquest.entity.CodingAttempt;
 import com.skillquest.entity.DataDetectiveAttempt;
+import com.skillquest.entity.InterviewAttempt;
 import com.skillquest.entity.ReasoningAttempt;
+import com.skillquest.entity.TeamworkAttempt;
 import com.skillquest.entity.User;
 import com.skillquest.repository.CommunicationAttemptRepository;
+import com.skillquest.repository.CodingAttemptRepository;
 import com.skillquest.repository.DataDetectiveAttemptRepository;
 import com.skillquest.exception.UserNotFoundException;
+import com.skillquest.repository.InterviewAttemptRepository;
 import com.skillquest.repository.ReasoningAttemptRepository;
+import com.skillquest.repository.TeamworkAttemptRepository;
 import com.skillquest.repository.UserRepository;
 import com.skillquest.service.DashboardService;
+import com.skillquest.service.RecruiterService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,15 +37,27 @@ public class DashboardServiceImpl implements DashboardService {
     private final ReasoningAttemptRepository attemptRepository;
     private final CommunicationAttemptRepository communicationAttemptRepository;
     private final DataDetectiveAttemptRepository dataDetectiveAttemptRepository;
+        private final CodingAttemptRepository codingAttemptRepository;
+        private final TeamworkAttemptRepository teamworkAttemptRepository;
+        private final InterviewAttemptRepository interviewAttemptRepository;
+    private final RecruiterService recruiterService;
 
     public DashboardServiceImpl(UserRepository userRepository,
                                 ReasoningAttemptRepository attemptRepository,
                                 CommunicationAttemptRepository communicationAttemptRepository,
-                                DataDetectiveAttemptRepository dataDetectiveAttemptRepository) {
+                                DataDetectiveAttemptRepository dataDetectiveAttemptRepository,
+                                CodingAttemptRepository codingAttemptRepository,
+                                TeamworkAttemptRepository teamworkAttemptRepository,
+                                InterviewAttemptRepository interviewAttemptRepository,
+                                @Lazy RecruiterService recruiterService) {
         this.userRepository = userRepository;
         this.attemptRepository = attemptRepository;
         this.communicationAttemptRepository = communicationAttemptRepository;
         this.dataDetectiveAttemptRepository = dataDetectiveAttemptRepository;
+        this.codingAttemptRepository = codingAttemptRepository;
+        this.teamworkAttemptRepository = teamworkAttemptRepository;
+        this.interviewAttemptRepository = interviewAttemptRepository;
+        this.recruiterService = recruiterService;
     }
 
     @Override
@@ -50,10 +70,16 @@ public class DashboardServiceImpl implements DashboardService {
                 communicationAttemptRepository.findByUserEmailOrderByCompletedAtDesc(email);
         List<DataDetectiveAttempt> dataDetectiveAttempts =
                 dataDetectiveAttemptRepository.findByUserEmailOrderByCompletedAtDesc(email);
+        List<CodingAttempt> codingAttempts = codingAttemptRepository.findByUserEmailOrderByCompletedAtDesc(email);
+        List<TeamworkAttempt> teamworkAttempts = teamworkAttemptRepository.findByUserEmailOrderByCompletedAtDesc(email);
+        List<InterviewAttempt> interviewAttempts = interviewAttemptRepository.findByUserEmailOrderByCompletedAtDesc(email);
         Map<String, Integer> communicationProgress = buildCommunicationProgress(communicationAttempts);
         int communicationCompleted = (int) communicationProgress.values().stream().filter(value -> value == 100).count();
         Map<String, Integer> dataDetectiveProgress = buildDataDetectiveProgress(dataDetectiveAttempts);
         int dataDetectiveCompleted = (int) dataDetectiveProgress.values().stream().filter(value -> value == 100).count();
+        int completedChallengeCount = uniqueReasoningCompleted(attempts) + communicationCompleted + dataDetectiveCompleted
+                + (codingAttempts.isEmpty() ? 0 : 1) + (teamworkAttempts.isEmpty() ? 0 : 1)
+                + (interviewAttempts.isEmpty() ? 0 : 1);
 
         int xp = user.getXp();
         int level = user.getLevel() > 0 ? user.getLevel() : (xp / 500) + 1;
@@ -77,7 +103,8 @@ public class DashboardServiceImpl implements DashboardService {
         }
 
         // Calculate badges dynamically based on actual achievements
-        List<BadgeDto> badges = buildBadges(attempts, communicationAttempts);
+        List<BadgeDto> badges = buildBadges(attempts, communicationAttempts, dataDetectiveAttempts,
+                codingAttempts, teamworkAttempts, interviewAttempts);
         int badgesEarnedCount = (int) badges.stream().filter(BadgeDto::isEarned).count();
 
         // Recent attempts (up to 5)
@@ -123,6 +150,20 @@ public class DashboardServiceImpl implements DashboardService {
                         .completedAt(a.getCompletedAt())
                         .build())
                 .forEach(recentAttempts::add);
+        teamworkAttempts.stream()
+                .map(a -> RecentAttemptDto.builder().id(a.getId()).questType("Teamwork Mission")
+                        .difficulty("Team Collaboration").score(a.getScore()).total(a.getTotalQuestions())
+                        .accuracy(a.getAccuracy()).earnedXp(a.getEarnedXp()).passed(a.isPassed())
+                        .badge(a.isPassed() ? "Teamwork Mission" : "Keep Practicing").completedAt(a.getCompletedAt()).build())
+                .forEach(recentAttempts::add);
+        interviewAttempts.stream()
+                .map(a -> RecentAttemptDto.builder().id(a.getId()).questType("Interview Battle")
+                        .difficulty(a.getRole()).score(a.getScore()).total(a.getMaxScore()).accuracy(a.getAccuracy())
+                        .earnedXp(a.getEarnedXp()).passed(a.isPassed())
+                        .badge(a.isPassed() ? "Interview Ready" : "Keep Practicing")
+                        .completedAt(a.getCompletedAt() == null ? null : a.getCompletedAt()
+                                .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime()).build())
+                .forEach(recentAttempts::add);
         recentAttempts.sort(Comparator.comparing(RecentAttemptDto::getCompletedAt,
                 Comparator.nullsLast(Comparator.reverseOrder())));
         recentAttempts = recentAttempts.stream().limit(5).collect(Collectors.toList());
@@ -137,8 +178,8 @@ public class DashboardServiceImpl implements DashboardService {
                 .currentLevelBaseXp(currentLevelBaseXp)
                 .nextLevelXp(nextLevelXp)
                 .xpToNextLevel(xpToNextLevel)
-                .completedChallengesCount(uniqueReasoningCompleted(attempts) + communicationCompleted + dataDetectiveCompleted)
-                .totalChallengesCount(11)
+                .completedChallengesCount(completedChallengeCount)
+                .totalChallengesCount(14)
                 .badgesEarnedCount(badgesEarnedCount)
                 .leaderboardRank(rank)
                 .badges(badges)
@@ -149,6 +190,7 @@ public class DashboardServiceImpl implements DashboardService {
                 .communicationAttemptsCount(communicationAttempts.size())
                 .communicationXp(communicationAttempts.stream().mapToInt(CommunicationAttempt::getEarnedXp).sum())
                 .communicationCompletedSubdivisions(communicationCompleted)
+                .assignedAssessments(recruiterService.assignedAssessmentsForCandidate(email))
                 .dataDetectiveProgress(dataDetectiveCompleted * 100 / dataDetectiveProgress.size())
                 .dataDetectiveProgressByInvestigation(dataDetectiveProgress)
                 .dataDetectiveAttemptsCount(dataDetectiveAttempts.size())
@@ -259,13 +301,25 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private List<BadgeDto> buildBadges(List<ReasoningAttempt> attempts,
-                                       List<CommunicationAttempt> communicationAttempts) {
+                                       List<CommunicationAttempt> communicationAttempts,
+                                       List<DataDetectiveAttempt> dataDetectiveAttempts,
+                                       List<CodingAttempt> codingAttempts,
+                                       List<TeamworkAttempt> teamworkAttempts,
+                                       List<InterviewAttempt> interviewAttempts) {
         List<BadgeDto> list = new ArrayList<>();
 
-        boolean hasAttempt = !attempts.isEmpty();
+        boolean hasCodingAttempt = !codingAttempts.isEmpty();
+        boolean hasAttempt = !attempts.isEmpty() || !communicationAttempts.isEmpty() || !dataDetectiveAttempts.isEmpty()
+                || hasCodingAttempt || !teamworkAttempts.isEmpty() || !interviewAttempts.isEmpty();
         boolean hasStrongScore = attempts.stream().anyMatch(a -> a.getAccuracy() >= 70);
         boolean hasMasterScore = attempts.stream().anyMatch(a -> a.getAccuracy() >= 90);
-        boolean hasThreeChallenges = attempts.size() >= 3;
+        int completedChallengeTypes = (attempts.isEmpty() ? 0 : 1)
+                + (communicationAttempts.isEmpty() ? 0 : 1)
+                + (dataDetectiveAttempts.isEmpty() ? 0 : 1)
+                + (codingAttempts.isEmpty() ? 0 : 1)
+                + (teamworkAttempts.isEmpty() ? 0 : 1)
+                + (interviewAttempts.isEmpty() ? 0 : 1);
+        boolean hasThreeChallenges = completedChallengeTypes >= 3;
         CommunicationAttempt passingCommunication = communicationAttempts.stream()
                 .filter(CommunicationAttempt::isPassed)
                 .max(Comparator.comparing(CommunicationAttempt::getCompletedAt,
@@ -277,8 +331,8 @@ public class DashboardServiceImpl implements DashboardService {
                 .name("Code Starter")
                 .icon("💻")
                 .description("Completed your first technical challenge.")
-                .earned(false)
-                .xpText(false ? "Earned • +50 XP" : "Locked • Complete Coding Challenge")
+                .earned(hasCodingAttempt)
+                .xpText(hasCodingAttempt ? "Earned • saved coding response" : "Locked • Complete Coding Challenge")
                 .build());
 
         list.add(BadgeDto.builder()
